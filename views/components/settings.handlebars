@@ -1,0 +1,55 @@
+<script src="/public/js/components/settings.js"></script>
+<form id="adjustCat">
+
+  <label for="catName">Cat Name:</label>
+  <br />
+  <input type="text" id="catName" name="catName" value="" />
+  <br />
+
+  <label for="catGender">Cat Gender:</label>
+  <br />
+  <input type="text" id="catGender" name="catGender" value="" />
+  <br />
+
+  <label for="catAge">Cat Age:</label>
+  <br />
+  <input type="number" id="catAge" name="catAge" value="" />
+  <br />
+
+  <label for="catBreed">Cat Breed:</label>
+  <br />
+  <input type="text" id="catBreed" name="catBreed" value="" />
+  <br />
+
+  <label for="catIsAltered">Is Cat Neutered?:</label>
+  <br />
+  <select id="catIsAltered">
+    {{!-- {{#select catIsAltered}} --}}
+    <option value=""></option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+    {{!-- {{/select}} --}}
+  </select>
+  <br />
+
+  <label for="catGallery">Cat Image (url):</label>
+  <br />
+  <input type="text" id="catGallery" name="catGallery" value="" />
+  <br />
+
+  <label for="userBio">User Bio:</label>
+  <br />
+  <input type="text" id="userBio" name="userBio" value="" />
+  <br />
+
+  <button type="submit">Update Page</button>
+</form>
+
+<br />
+<br />
+<br />
+
+<label for="delete">Delete Account:</label>
+<br />
+<button id="delete" value="">Click Here!</button>
+<br />

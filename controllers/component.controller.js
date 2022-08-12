@@ -1,13 +1,19 @@
 module.exports = {
-    loadSignin(req, res, next) {
-        var renderData = {};
-        renderData.layout = "component";
-        res.render("components/signin", renderData);
-    },
+  loadSignin(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    res.render("components/signin", renderData);
+  },
 
-    loadSignup(req, res, next) {
-        var renderData = {};
-        renderData.layout = "component";
-        res.render("components/signup", renderData);
-    }
-}
+  loadSignup(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    res.render("components/signup", renderData);
+  },
+
+  loadSettings(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    res.render("components/settings", renderData);
+  },
+};
