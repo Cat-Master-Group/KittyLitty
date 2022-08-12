@@ -1,4 +1,4 @@
-const { createUser, authUser, changeUser } = require("../data/user.data");
+const { createUser, authUser, changeUser } = require("../../data/user.data");
 
 const signUp = async (req, res, next) => {
   try {
@@ -31,15 +31,20 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const signOut = async (req, res, next) => {};
+const signOut = async (req, res, next) => { };
 
 const isUser = async (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.json({ login: "fail" });
+    res.json({ login: "fail" });
   }
 };
+
+const sendLoginStatus = async (req, res, next) => {
+  res.json({ login: "success" });
+};
+
 const adjustUser = async (req, res, next) => {
   try {
     const updatedUser = changeUser(req.session.user, req.body);
@@ -50,4 +55,4 @@ const adjustUser = async (req, res, next) => {
   }
 };
 
-module.exports = { signUp, signIn, signOut, isUser, adjustUser };
+module.exports = { signUp, signIn, signOut, isUser, adjustUser, sendLoginStatus };
