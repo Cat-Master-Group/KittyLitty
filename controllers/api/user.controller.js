@@ -31,7 +31,7 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const signOut = async (req, res, next) => { };
+const signOut = async (req, res, next) => {};
 
 const isUser = async (req, res, next) => {
   if (req.session.user) {
@@ -47,6 +47,8 @@ const sendLoginStatus = async (req, res, next) => {
 
 const adjustUser = async (req, res, next) => {
   try {
+    console.log(req.session);
+    console.log(req.body);
     const updatedUser = changeUser(req.session.user, req.body);
     res.json(updatedUser);
   } catch (error) {
@@ -55,4 +57,11 @@ const adjustUser = async (req, res, next) => {
   }
 };
 
-module.exports = { signUp, signIn, signOut, isUser, adjustUser, sendLoginStatus };
+module.exports = {
+  signUp,
+  signIn,
+  signOut,
+  isUser,
+  adjustUser,
+  sendLoginStatus,
+};
