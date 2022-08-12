@@ -10,7 +10,7 @@ app.use("/public", static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
+app.engine("handlebars", exphbs.engine({ defaultLayout: "frame" }));
 app.set("view engine", "handlebars");
 
 app.use(
@@ -24,8 +24,7 @@ app.use(
 
 app.use("*", async (req, res, next) => {
   console.log(
-    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${
-      req.session.user ? "Authenticated User" : "Non-Authenticated User"
+    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${req.session.user ? "Authenticated User" : "Non-Authenticated User"
     })`
   );
   next();
