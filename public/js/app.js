@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", async function (event) {
   axios(requestConfig).then(async (responseMessage) => {
     if (
       responseMessage &&
-      responseMessage.login &&
-      responseMessage.login == "success"
+      responseMessage.data &&
+      responseMessage.data.login &&
+      responseMessage.data.login == "success"
     ) {
       //user is logged in, load app page
     } else {

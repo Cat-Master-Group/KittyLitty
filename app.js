@@ -42,7 +42,7 @@ app.use("/load", (req, res, next) => {
     DISABLE_LOGIN) {
     next();
   } else {
-    res.render("error", { layout: "component", errorMessage: "401 Unauthorized: User is not logged in" });
+    res.render("error", { axios: req.query.axios, layout: "component", componentname: "error", errorMessage: "401 Unauthorized: User is not logged in" });
   }
 });
 
