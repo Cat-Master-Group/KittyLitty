@@ -91,4 +91,15 @@ const changeUser = async (user, changeObj) => {
   return await getUser(id);
 };
 
-module.exports = { createUser, authUser, changeUser };
+const removeUser = async (id) => {
+  const userCollection = await users();
+  const deletedUser = userCollection.deleteOne({
+    _id: ObjectId(id),
+  });
+  if (deletedUser.deletedCount === 0) {
+    throw `Could not delete user with id of ${id}`;
+  }
+  return true;
+};
+
+module.exports = { createUser, getUser, authUser, changeUser, removeUser };
