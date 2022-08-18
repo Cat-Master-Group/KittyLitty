@@ -27,12 +27,12 @@ module.exports = {
   },
 
   //Swipe
-  loadSwipe(req, res, next) {
+  available(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
     renderData.axios = req.query.axios;
-    renderData.componentname = "swipe";
+    renderData.componentname = "available";
     renderData.script = true;
-    res.render("components/swipe", renderData);
+    res.render("components/available", renderData);
   },
 };

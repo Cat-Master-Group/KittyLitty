@@ -91,4 +91,48 @@ const changeUser = async (user, changeObj) => {
   return await getUser(id);
 };
 
-module.exports = { createUser, authUser, changeUser };
+const getSelectedUsers = async (id) => {
+  const userCollection = await users();
+  console.log(id);
+  const curUser = await getUser(id);
+  // console.log(curUser);
+  let blackList = [ObjectId(id)];
+  if (curUser.followedUsers) {
+    curUser.followedUsers = curUser.followedUsers.map((x) => ObjectId(x));
+    console.log(curUser.followedUsers);
+    blackList = [...curUser.followedUsers, ...blackList];
+  }
+  if (curUser.friendedUsers) {
+    curUser.friendedUsers = curUser.friendedUsers.map((x) => ObjectId(x));
+    blackList = [...curUser.friendedUsers, ...blackList];
+  }
+  if (curUser.blockedUsers) {
+    curUser.blockedUsers = curUser.blockedUsers.map((x) => ObjectId(x));
+    blackList = [...curUser.blockedUsers, ...blackList];
+  }
+  const selectedUsers = await userCollection
+    .find(
+      {
+        _id: {
+          $nin: blackList,
+        },
+        followedUsers: {
+          $nin: [ObjectId(id)],
+        },
+        blockedUsers: {
+          $nin: [ObjectId(id)],
+        },
+      },
+      {
+        projection: {
+          _id: true,
+        },
+      }
+    )
+    .toArray();
+
+  console.log(selectedUsers);
+  return selectedUsers;
+};
+
+module.exports = { createUser, authUser, changeUser, getSelectedUsers };

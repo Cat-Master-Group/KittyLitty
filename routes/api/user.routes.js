@@ -6,6 +6,7 @@ const {
   isUser,
   sendLoginStatus,
   adjustUser,
+  availableUsers
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -27,9 +28,9 @@ router.get("/authcheck", function (req, res, next) {
 });
 
 //for swipe
-router.get("/swipe", function (req, res, next) {
+router.get("/available", function (req, res, next) {
   //isUser(req, res, next);
-  swipe(req, res, next);
+  availableUsers(req, res, next);
 });
 
 module.exports = router;

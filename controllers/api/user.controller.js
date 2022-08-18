@@ -1,4 +1,9 @@
-const { createUser, authUser, changeUser } = require("../../data/user.data");
+const {
+  createUser,
+  authUser,
+  changeUser,
+  getSelectedUsers,
+} = require("../../data/user.data");
 
 const signUp = async (req, res, next) => {
   try {
@@ -57,6 +62,18 @@ const adjustUser = async (req, res, next) => {
   }
 };
 
+const availableUsers = async (req, res, next) => {
+  try {
+    const currentUser = req.session.user._id;
+    const list = await getSelectedUsers(currentUser);
+    // console.log(list);
+    res.json(list);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -64,4 +81,5 @@ module.exports = {
   isUser,
   adjustUser,
   sendLoginStatus,
+  availableUsers,
 };
