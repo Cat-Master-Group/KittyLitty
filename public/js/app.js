@@ -25,10 +25,6 @@ startup();
 //Main App Asseembly Function
 function assembleApp() {
   console.log("assemble app");
-  if (SignIn)
-    delete SignIn;
-  if (SignUp)
-    delete SignUp;
 }
 
 //Load Component Functions
