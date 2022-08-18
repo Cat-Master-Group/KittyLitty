@@ -26,4 +26,10 @@ router.get("/authcheck", function (req, res, next) {
   sendLoginStatus(req, res, next);
 });
 
+//for swipe
+router.get("/swipe", function (req, res, next) {
+  //isUser(req, res, next);
+  swipe(req, res, next);
+});
+
 module.exports = router;
