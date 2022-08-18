@@ -1,4 +1,11 @@
-const { createUser, authUser, changeUser } = require("../../data/user.data");
+const {
+  createUser,
+  authUser,
+  changeUser,
+  removeUser,
+  getUser,
+} = require("../../data/user.data");
+const { checkId } = require("../../validations");
 
 const signUp = async (req, res, next) => {
   try {
@@ -57,6 +64,33 @@ const adjustUser = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    checkId(req.session.user._id, "_id");
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "Id of user cannot be validated!" });
+  }
+
+  try {
+    await getUser(req.session.user._id);
+  } catch (error) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  try {
+    const oneUser = removeUser(req.session.user._id);
+    if (oneUser) {
+      req.session.destroy();
+      return res.json({ deleted: true });
+    }
+    throw "User was unsuccessfully deleted!";
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -64,4 +98,5 @@ module.exports = {
   isUser,
   adjustUser,
   sendLoginStatus,
+  deleteUser,
 };

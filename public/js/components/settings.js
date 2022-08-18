@@ -7,6 +7,7 @@ const afterLoaded = () => {
   const catIsAltered = document.getElementById("catIsAltered");
   const catGallery = document.getElementById("catGallery");
   const userBio = document.getElementById("userBio");
+  const deleteButton = document.getElementById("delete");
 
   if (adjustForm) {
     adjustForm.addEventListener("submit", (event) => {
@@ -34,6 +35,13 @@ const afterLoaded = () => {
         payLoad.userBio = userBio.value.trim();
       }
       const adjustData = axios.patch("/api/user/adjust", payLoad);
+    });
+  }
+
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const deleteTheUser = await axios.delete("/api/user/delete");
     });
   }
 };
