@@ -10,26 +10,25 @@ async function main() {
   const userCollection = await users();
 
   const user1 = {
-    userName: "Richard Parker",
-    userCat: {
-      catName: "Pi",
-      catGender: "M",
-      catAge: 36,
-      catBreed: "Maine Coon",
-      catIsAltered: true,
-      catGallery: [
-        "https://cdn.catapp.com/9a499033-c49c-4673-b976-6941bfbe0fd7.jpg",
-        "https://cdn.catapp.com/91ee5335-1a2f-470e-ab51-1750730b5201.jpg",
-      ],
-    },
+    catName: "Pi",
+    catGender: "M",
+    catAge: 36,
+    catBreed: "Maine Coon",
+    catIsAltered: true,
+    catGallery: [
+      "https://cdn.catapp.com/9a499033-c49c-4673-b976-6941bfbe0fd7.jpg",
+      "https://cdn.catapp.com/91ee5335-1a2f-470e-ab51-1750730b5201.jpg",
+    ],
     userBio: "We found Pi as a stray living in one of our lifeboats...",
-    userLocation: {
-      country: "USA",
-      address1: "1212 Larktown Drive",
-      address2: "Union City, ND",
-    },
   };
-  await userData.createUser("Richard Parker", "rparker@gmail.com", "meow");
+
+  const userOne = await userData.createUser(
+    "Richard Parker",
+    "rparker@gmail.com",
+    "meow"
+  );
+  const idOne = userOne._id.toString();
+  await userData.changeUser(idOne, user1);
 
   const user2 = {
     userId: "8ad9b86e-bd89-4f1a-8455-728976bb14f6",

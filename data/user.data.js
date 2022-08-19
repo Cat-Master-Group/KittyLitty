@@ -61,44 +61,50 @@ const authUser = async (email, password) => {
 };
 
 const changeUser = async (user, changeObj) => {
-  const payload = {};
-  if (changeObj.catGender) {
-    payload.catGender = changeObj.catGender;
-  }
-  if (changeObj.catAge) {
-    payload.catAge = changeObj.catAge;
-  }
-  if (changeObj.catBreed) {
-    payload.catBreed = changeObj.catBreed;
-  }
-  if (changeObj.catIsAltered) {
-    payload.catIsAltered = changeObj.catIsAltered;
-  }
-  if (changeObj.userBio) {
-    payload.userBio = changeObj.userBio;
+  const userCollection = await users();
+  const currentUser = await getUser(user._id);
+  let updateChanges = currentUser;
+  if (!updateChanges.userCat) {
+    updateChanges.userCat = {};
   }
 
-  const userCollection = await users();
+  if (changeObj.catName) {
+    updateChanges.userCat.catName = changeObj.catName;
+  }
+  if (changeObj.catGender) {
+    updateChanges.userCat.catGender = changeObj.catGender;
+  }
+  if (changeObj.catAge) {
+    updateChanges.userCat.catAge = changeObj.catAge;
+  }
+  if (changeObj.catBreed) {
+    updateChanges.userCat.catBreed = changeObj.catBreed;
+  }
+  if (changeObj.catIsAltered) {
+    updateChanges.userCat.catIsAltered = changeObj.catIsAltered;
+  }
+  if (changeObj.userBio) {
+    updateChanges.userBio = changeObj.userBio;
+  }
+
   const changedUser = await userCollection.updateOne(
     {
-      _id: ObjectId(user.id),
+      _id: ObjectId(user._id),
     },
-    { $set: payload }
+    { $set: updateChanges }
   );
   if (!changedUser.matchedCount && !changedUser.modifiedCount) {
     throw "Update failed";
   }
-  return await getUser(id);
+  return await getUser(user._id);
 };
 
 const getSelectedUsers = async (id) => {
   const userCollection = await users();
-  console.log(id);
   const curUser = await getUser(id);
   let blackList = [ObjectId(id)];
   if (curUser.followedUsers) {
     curUser.followedUsers = curUser.followedUsers.map((x) => ObjectId(x));
-    console.log(curUser.followedUsers);
     blackList = [...curUser.followedUsers, ...blackList];
   }
   if (curUser.friendedUsers) {
@@ -129,8 +135,6 @@ const getSelectedUsers = async (id) => {
       }
     )
     .toArray();
-
-  console.log(selectedUsers);
   return selectedUsers;
 };
 const alreadySeen = (personA, personBId, key) => {
@@ -236,6 +240,7 @@ const removeUser = async (id) => {
 
 module.exports = {
   createUser,
+  getUser,
   authUser,
   changeUser,
   getSelectedUsers,

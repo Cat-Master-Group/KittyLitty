@@ -8,6 +8,7 @@ const {
   availableUsers,
   deleteUser,
   swipeUser,
+  getUserInfo,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -26,11 +27,14 @@ router.get("/authcheck", function (req, res, next) {
   sendLoginStatus(req, res, next);
 });
 
+router.get("/info/:id", function (req, res, next) {
+  getUserInfo(req, res, next);
+});
+
 router.delete("/delete", function (req, res, next) {
   deleteUser(req, res, next);
 });
 
-//for swipe
 router.get("/available", function (req, res, next) {
   availableUsers(req, res, next);
 });
