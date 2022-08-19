@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "clean": "node tasks/clean.js",
+    "seed": "node tasks/seed.js",
     "start-dev": "nodemon app.js -dev",
     "start-dev-no-login": "nodemon app.js -dev -nologin"
   },
@@ -16,6 +17,7 @@
     "express": "^4.18.1",
     "express-handlebars": "^6.0.6",
     "express-session": "^1.17.3",
-    "mongodb": "^4.8.1"
+    "mongodb": "^4.8.1",
+    "xss": "^1.0.13"
   }
 }

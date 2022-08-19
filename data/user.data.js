@@ -239,6 +239,17 @@ const checkId = (id, varName) => {
   return id;
 };
 
+const removeUser = async (id) => {
+  const userCollection = await users();
+  const deletedUser = userCollection.deleteOne({
+    _id: ObjectId(id),
+  });
+  if (deletedUser.deletedCount === 0) {
+    throw `Could not delete user with id of ${id}`;
+  }
+  return true;
+};
+
 module.exports = {
   createUser,
   authUser,
@@ -246,4 +257,5 @@ module.exports = {
   getSelectedUsers,
   canSwipe,
   swipe,
+  removeUser,
 };
