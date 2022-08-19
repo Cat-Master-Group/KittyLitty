@@ -64,7 +64,6 @@
           currentPerson = fetchList[currentIndex];
           getCurrentPerson(currentPerson);
         }
-        
       });
     } catch (error) {
       alert("Error occured during swipe! Please Refresh!");
@@ -72,9 +71,9 @@
     }
   });
 
-  decline.on("click", function(event){
+  decline.on("click", function (event) {
     event.preventDefault();
-    try{
+    try {
       currentIndex++;
       if (currentIndex === fetchList.length) {
         noMoreMatches();
@@ -82,7 +81,9 @@
         currentPerson = fetchList[currentIndex];
         getCurrentPerson(currentPerson);
       }
-      
+    } catch (error) {
+      alert("Error occured during swipe! Please Refresh!");
+      console.log(error);
     }
   });
 
