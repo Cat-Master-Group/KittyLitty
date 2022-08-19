@@ -134,5 +134,116 @@ const getSelectedUsers = async (id) => {
   console.log(selectedUsers);
   return selectedUsers;
 };
+const alreadySeen = (personA, personBId, key) => {
+  if (personA[key]) {
+    const index = personA[key].indexOf(ObjectId(personBId));
+    if (index >= 0) {
+      return true;
+    }
+    return false;
+  }
+};
+const canSwipe = async (id, matchId) => {
+  if (id === matchId) {
+    throw "Cannot match with yourself!";
+  }
+  checkId(id, "id");
+  checkId(matchId, "matchId");
+  const userCollection = await users();
+  const curUser = await getUser(id);
+  const matchUser = await getUser(matchId);
 
-module.exports = { createUser, authUser, changeUser, getSelectedUsers };
+  if (curUser.followedUsers) {
+    const index = curUser.followedUsers.indexOf(ObjectId(matchId));
+    if (index >= 0) {
+      throw `${curUser.userName} is already following ${matchUser.userName}`;
+    }
+  }
+  const userFollow = alreadySeen(curUser, matchId, "friendedUsers");
+  const matchFollow = alreadySeen(matchUser, id, "friendedUsers");
+  const userBlock = alreadySeen(curUser, matchId, "blockedUsers");
+  const matchBlock = alreadySeen(matchUser, id, "blockedUsers");
+
+  if (userFollow || matchFollow || userBlock || matchBlock) {
+    throw "Cannot match!";
+  }
+};
+
+const swipe = async (id, matchId) => {
+  const userCollection = await users();
+  const curUser = await getUser(id);
+  const matchUser = await getUser(matchId);
+  let curList = [];
+  if (
+    matchUser.followedUsers &&
+    matchUser.followedUsers.indexOf(ObjectId(id)) >= 0
+  ) {
+    if (curUser.friendedUsers) {
+      curList = [...curUser.friendedUsers];
+    }
+    let matchList = [];
+    if (matchUser.friendedUsers) {
+      matchList = [...matchUser.friendedUsers];
+    }
+    curList.push(ObjectId(id));
+    matchList.push(ObjectId(id));
+
+    const matchFollowListIndex = matchUser.followedUsers.indexOf(ObjectId(id));
+    const matchFollow = matchUser.followedUsers.splice(matchFollowListIndex);
+
+    const updateCurUser = userCollection.findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { friendedUsers: curList } }
+    );
+
+    const updateMatchUser = userCollection.findOneAndUpdate(
+      { _id: ObjectId(matchId) },
+      { $set: { friendedUsers: matchList, followedUsers: matchFollow } }
+    );
+
+    if (!updateCurUser || !updateMatchUser) {
+      throw "Match unsuccessful!";
+    }
+    return updateCurUser, updateMatchUser;
+  } else {
+    if (curUser.followedUsers) {
+      curList = [...curUser.followedUsers];
+    }
+    curList.push(ObjectId(matchId));
+    const updateCurUser = userCollection.findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { followedUsers: curList } }
+    );
+
+    if (!updateCurUser) {
+      throw "Match unsuccessful!";
+    }
+    return [updateCurUser];
+  }
+};
+
+const checkId = (id, varName) => {
+  if (!id) {
+    throw `Error: You must provide a ${varName}`;
+  }
+  if (typeof id !== "string") {
+    throw `Error:${varName} must be a string`;
+  }
+  id = id.trim();
+  if (id.length === 0) {
+    throw `Error: ${varName} cannot be an empty string or just spaces`;
+  }
+  if (!ObjectId.isValid(id)) {
+    throw `Error: ${varName} invalid object ID`;
+  }
+  return id;
+};
+
+module.exports = {
+  createUser,
+  authUser,
+  changeUser,
+  getSelectedUsers,
+  canSwipe,
+  swipe,
+};

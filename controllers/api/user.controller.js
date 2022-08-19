@@ -74,6 +74,8 @@ const availableUsers = async (req, res, next) => {
   }
 };
 
+//Add swipe function
+
 module.exports = {
   signUp,
   signIn,
