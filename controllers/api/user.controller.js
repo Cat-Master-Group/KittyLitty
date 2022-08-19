@@ -4,6 +4,8 @@ const {
   changeUser,
   removeUser,
   getSelectedUsers,
+  canSwipe,
+  swipe,
 } = require("../../data/user.data");
 
 const signUp = async (req, res, next) => {
@@ -93,10 +95,28 @@ const availableUsers = async (req, res, next) => {
   try {
     const currentUser = req.session.user._id;
     const list = await getSelectedUsers(currentUser);
-    // console.log(list);
     res.json(list);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
+const swipeUser = async (req, res, next) => {
+  try {
+    const canItSwipe = canSwipe(req.session.user._id, req.body.matchId);
+    if (canItSwipe) {
+      throw "Cannot Match";
+    }
+  } catch (error) {
+    res.status(400).json({ message: "User cannot match with this person" });
+  }
+  try {
+    const { _id } = req.session.user;
+    const { matchId } = req.body;
+    const result = swipe(_id, matchId);
+    res.json(result);
+  } catch (error) {
     res.status(500).json({ error });
   }
 };
@@ -111,4 +131,5 @@ module.exports = {
   sendLoginStatus,
   deleteUser,
   availableUsers,
+  swipeUser,
 };

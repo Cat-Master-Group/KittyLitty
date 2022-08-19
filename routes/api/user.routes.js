@@ -7,6 +7,7 @@ const {
   adjustUser,
   availableUsers,
   deleteUser,
+  swipeUser,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -31,10 +32,11 @@ router.delete("/delete", function (req, res, next) {
 
 //for swipe
 router.get("/available", function (req, res, next) {
-  //isUser(req, res, next);
   availableUsers(req, res, next);
 });
 
-//add a router.patch. look at line 20
+router.patch("/swipe", function (req, res, next) {
+  swipeUser(req, res, next);
+});
 
 module.exports = router;
