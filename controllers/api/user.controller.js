@@ -9,9 +9,11 @@ const { checkId } = require("../../validations");
 
 const signUp = async (req, res, next) => {
   try {
-    const { userName, email, password } = req.body;
-    console.log(req.body);
+    const userName = xss(req.body.userName);
+    const email = xss(req.body.email);
+    const password = xss(req.body.password);
 
+    console.log(req.body);
     const oneUser = await createUser(userName, email, password);
     console.log(oneUser);
     res.json({ ...oneUser });
@@ -23,7 +25,8 @@ const signUp = async (req, res, next) => {
 
 const signIn = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const email = xss(req.body.email);
+    const password = xss(req.body.password);
     const user = await authUser(email, password);
     console.log(user);
     if (user) {
@@ -38,18 +41,14 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const signOut = async (req, res, next) => {};
+const signOut = async (req, res, next) => { };
 
-const isUser = async (req, res, next) => {
+const sendLoginStatus = async (req, res, next) => {
   if (req.session.user) {
-    next();
+    res.json({ login: "success" });
   } else {
     res.json({ login: "fail" });
   }
-};
-
-const sendLoginStatus = async (req, res, next) => {
-  res.json({ login: "success" });
 };
 
 const adjustUser = async (req, res, next) => {
@@ -95,7 +94,6 @@ module.exports = {
   signUp,
   signIn,
   signOut,
-  isUser,
   adjustUser,
   sendLoginStatus,
   deleteUser,

@@ -1,5 +1,5 @@
 //Startup Tasks
-document.addEventListener("DOMContentLoaded", async function (event) {
+async function startup() {
   //Check if user is logged in
   const requestConfig = {
     method: "GET",
@@ -13,12 +13,19 @@ document.addEventListener("DOMContentLoaded", async function (event) {
       responseMessage.data.login &&
       responseMessage.data.login == "success"
     ) {
-      //user is logged in, load app page
+      assembleApp();
     } else {
       loadSignin();
     }
   });
-});
+}
+
+startup();
+
+//Main App Asseembly Function
+function assembleApp() {
+  console.log("assemble app");
+}
 
 //Load Component Functions
 async function loadSignin() {
@@ -27,7 +34,7 @@ async function loadSignin() {
     url: "/load/signin",
     params: {
       axios: true,
-    }
+    },
   };
 
   axios(requestConfig).then(replaceContentDiv);
@@ -59,7 +66,6 @@ async function loadSettings() {
 
 //Helper Methods
 function replaceContentDiv(responseMessage) {
-  console.log(responseMessage.data);
   if (responseMessage) {
     const contentDiv = document.getElementById("content");
     setInnerHTML(contentDiv, responseMessage.data);
