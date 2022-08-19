@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const mongoCollections = require("../config/mongoCollections");
-const e = require("express");
+const { checkId } = require("../validations");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
@@ -95,7 +95,6 @@ const getSelectedUsers = async (id) => {
   const userCollection = await users();
   console.log(id);
   const curUser = await getUser(id);
-  // console.log(curUser);
   let blackList = [ObjectId(id)];
   if (curUser.followedUsers) {
     curUser.followedUsers = curUser.followedUsers.map((x) => ObjectId(x));
@@ -149,7 +148,6 @@ const canSwipe = async (id, matchId) => {
   }
   checkId(id, "id");
   checkId(matchId, "matchId");
-  const userCollection = await users();
   const curUser = await getUser(id);
   const matchUser = await getUser(matchId);
 
@@ -167,52 +165,55 @@ const canSwipe = async (id, matchId) => {
   if (userFollow || matchFollow || userBlock || matchBlock) {
     throw "Cannot match!";
   }
+  return true;
 };
 
 const swipe = async (id, matchId) => {
   const userCollection = await users();
   const curUser = await getUser(id);
   const matchUser = await getUser(matchId);
-  let curList = [];
+
   if (
     matchUser.followedUsers &&
     matchUser.followedUsers.indexOf(ObjectId(id)) >= 0
   ) {
+    let userFriendList = [];
     if (curUser.friendedUsers) {
-      curList = [...curUser.friendedUsers];
+      userFriendList = [...curUser.friendedUsers];
     }
-    let matchList = [];
+    let matchFriendList = [];
     if (matchUser.friendedUsers) {
-      matchList = [...matchUser.friendedUsers];
+      matchFriendList = [...matchUser.friendedUsers];
     }
-    curList.push(ObjectId(id));
-    matchList.push(ObjectId(id));
+    userFriendList.push(ObjectId(matchId));
+    matchFriendList.push(ObjectId(id));
 
     const matchFollowListIndex = matchUser.followedUsers.indexOf(ObjectId(id));
-    const matchFollow = matchUser.followedUsers.splice(matchFollowListIndex);
+    matchUser.followedUsers.splice(matchFollowListIndex);
 
     const updateCurUser = userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $set: { friendedUsers: curList } }
+      { $set: { friendedUsers: userFriendList } }
     );
 
     const updateMatchUser = userCollection.findOneAndUpdate(
       { _id: ObjectId(matchId) },
-      { $set: { friendedUsers: matchList, followedUsers: matchFollow } }
+      { $set: { friendedUsers: matchFriendList, followedUsers: matchFollow } }
     );
 
     if (!updateCurUser || !updateMatchUser) {
       throw "Match unsuccessful!";
     }
-    return updateCurUser, updateMatchUser;
+    return [updateCurUser, updateMatchUser];
   } else {
+    let curFollowerList = [];
     if (curUser.followedUsers) {
-      curList = [...curUser.followedUsers];
+      curFollowerList = [...curUser.followedUsers];
     }
-    curList.push(ObjectId(matchId));
+    curFollowerList.push(ObjectId(matchId));
     const updateCurUser = userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $set: { followedUsers: curList } }
+      { $set: { followedUsers: curFollowerList } }
     );
 
     if (!updateCurUser) {
@@ -220,23 +221,6 @@ const swipe = async (id, matchId) => {
     }
     return [updateCurUser];
   }
-};
-
-const checkId = (id, varName) => {
-  if (!id) {
-    throw `Error: You must provide a ${varName}`;
-  }
-  if (typeof id !== "string") {
-    throw `Error:${varName} must be a string`;
-  }
-  id = id.trim();
-  if (id.length === 0) {
-    throw `Error: ${varName} cannot be an empty string or just spaces`;
-  }
-  if (!ObjectId.isValid(id)) {
-    throw `Error: ${varName} invalid object ID`;
-  }
-  return id;
 };
 
 const removeUser = async (id) => {
