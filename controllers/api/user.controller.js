@@ -1,3 +1,4 @@
+const xss = require("xss");
 const {
   createUser,
   authUser,
@@ -41,7 +42,7 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const signOut = async (req, res, next) => { };
+const signOut = async (req, res, next) => {};
 
 const sendLoginStatus = async (req, res, next) => {
   if (req.session.user) {
