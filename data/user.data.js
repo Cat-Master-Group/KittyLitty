@@ -2,6 +2,7 @@ const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const mongoCollections = require("../config/mongoCollections");
 const { checkId } = require("../validations");
+const { createConversation } = require("./conversations.data");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
@@ -208,6 +209,7 @@ const swipe = async (id, matchId) => {
     if (!updateCurUser || !updateMatchUser) {
       throw "Match unsuccessful!";
     }
+    await createConversation([id, matchId]);
     return [updateCurUser, updateMatchUser];
   } else {
     let curFollowerList = [];
