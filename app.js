@@ -29,20 +29,28 @@ app.use(
 //Middleware
 app.use("*", async (req, res, next) => {
   console.log(
-    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${req.session.user ? "Authenticated User" : "Non-Authenticated User"
+    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${
+      req.session.user ? "Authenticated User" : "Non-Authenticated User"
     })`
   );
   next();
 });
 
 app.use("/load", (req, res, next) => {
-  if (req.session.user ||
+  if (
+    req.session.user ||
     req.path == "/signin" ||
     req.path == "/signup" ||
-    DISABLE_LOGIN) {
+    DISABLE_LOGIN
+  ) {
     next();
   } else {
-    res.render("error", { axios: req.query.axios, layout: "component", componentname: "error", errorMessage: "401 Unauthorized: User is not logged in" });
+    res.render("error", {
+      axios: req.query.axios,
+      layout: "component",
+      componentname: "error",
+      errorMessage: "401 Unauthorized: User is not logged in",
+    });
   }
 });
 

@@ -118,7 +118,7 @@ async function main() {
   const insertUser2 = await userCollection.insertOne(user2);
   console.log(insertUser2.insertedId);
   await userCollection.find().toArray();
-  await dbConnection.closeConnection();
+  dbConnection.closeConnection();
 }
 
 main().catch((error) => {

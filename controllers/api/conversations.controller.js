@@ -1,5 +1,4 @@
 const {
-  createConversation,
   getConversationId,
   getUserConversations,
   insertMessage,
@@ -8,8 +7,9 @@ const { getUser } = require("../../data/user.data");
 
 const conversationsList = async (req, res, next) => {
   try {
-    const messages = await getUserConversations();
-    console.log(messages);
+    const id = req.session.user._id;
+    const messages = await getUserConversations(id);
+    // console.log("MESSAGES HERE", messages);
     res.status(200).json({ messages });
   } catch (error) {
     console.log(error);
@@ -17,109 +17,36 @@ const conversationsList = async (req, res, next) => {
   }
 };
 
+const getSingleConversation = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const conversationId = await getConversationId(id);
+    return res.status(200).json({ conversationId });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: "CONVERSATION ID ERROR: CONVERSATION ID DOES NOT EXIST" });
+  }
+};
+
 const sendMessage = async (req, res, next) => {
   try {
-    const id = "62feeabec04bca97f8fc445c";
-    console.log(req.body);
-    const message = req.body.messages.messageText;
-    const conversationId = req.body.conversationId;
-
-    // console.log("CURRENT USER ID HERE:", id);
-
-    // console.log("CONVERSATIONS ID HERE:", conversationId);
+    const id = req.session.user._id;
+    const message = req.body.messages;
+    const conversationId = req.params.id;
 
     const singleMessage = await insertMessage(id, conversationId, message);
-    console.log("MESSAGE SENDING HERE", singleMessage);
-    // const insertNewMessage = await insertMessage(id, conversationId, message);
-    // console.log("INSERTING NEW MESSAGE HERE", insertNewMessage);
+
     return res.status(200).json(singleMessage);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "COULD NOT SEND MESSAGE" });
   }
 };
 
 module.exports = {
   conversationsList,
+  getSingleConversation,
   sendMessage,
 };
-
-// const load
-
-// module.exports = {
-//   loadMesages(req, res, next) {
-//     const renderData = {};
-//     renderData.layout = "component";
-//     renderData.axios = req.query.axios;
-//     renderData.componentname = "messages";
-//     renderData.script = true;
-//     res.render("components/messages", renderData);
-//   },
-
-//   loadMessage(req, res, next) {
-//     const renderData = {};
-//     renderData.layout = "component";
-//     renderData.axios = req.query.axios;
-//     renderData.componentname = "messages";
-//     renderData.script = true;
-//     res.render("components/messages", renderData);
-//   },
-
-//   loadNewMessage(req, res, next) {
-//     const renderData = {};
-//     renderData.layout = "component";
-//     renderData.axios = req.query.axios;
-//     renderData.componentname = "messages";
-//     renderData.script = true;
-//     res.render("components/messages", renderData);
-//   },
-// };
-
-// const {
-//   createConversation,
-//   getConversationId,
-//   getParticipantId,
-//   getAllConversations,
-//   insertConversations,
-// } = require("../../data/conversations.data");
-
-// const loadMessages = async (req, res, next) => {
-//   res.render("messages", { framename: "messages", script: true });
-// };
-
-// module.exports = { loadMessages };
-
-// const initializeMessage = async (req, res, next) => {
-//   try {
-//     const { id } = getConversationId(req.conversationId);
-//     console.log(id);
-
-//     const singularConversation = await createConversation(id);
-//     console.log(singularConversation);
-
-//     const { particpiantId } = getParticipantId(req.participants);
-//     console.log(particpiantId);
-
-//     getAllConversations();
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ e });
-//   }
-// };
-
-// const sendMessage = async (req, res, next) => {
-//   try {
-//     const { messages } = getConversationId(req.conversationId);
-//     console.log(messages);
-
-//     const singularConversation = await insertConversations(messages);
-//     console.log(singularConversation);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error });
-//   }
-// };
-
-// module.exports = {
-//   initializeMessage,
-//   sendMessage,
-// };
