@@ -27,7 +27,6 @@ async function main() {
     "rparker@gmail.com",
     "meow"
   );
-  const idOne = userOne._id.toString();
   await userData.changeUser(userOne, user1);
 
   const user2 = {
