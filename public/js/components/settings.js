@@ -1,53 +1,108 @@
-const afterLoaded = () => {
-  const adjustForm = document.getElementById("adjustCat");
-  const catName = document.getElementById("catName");
-  const catGender = document.getElementById("catGender");
-  const catAge = document.getElementById("catAge");
-  const catBreed = document.getElementById("catBreed");
-  const catIsAltered = document.getElementById("catIsAltered");
-  const catGallery = document.getElementById("catGallery");
-  const userBio = document.getElementById("userBio");
-  const deleteButton = document.getElementById("delete");
+(function ($) {
+  const adjustForm = $("#adjustCat");
+  const catName = $("#catName");
+  const catGender = $("#catGender");
+  const catAge = $("#catAge");
+  const catBreed = $("#catBreed");
+  const catIsAltered = $("#catIsAltered");
+  const catGallery = $("#catGallery");
+  const userBio = $("#userBio");
+  const deleteButton = $("#delete");
+  const locationBtn = $("#locationBtn");
+  const locationResult = $("#locationResult");
+  const filterMiles = $("#filterMiles");
 
-  if (adjustForm) {
-    adjustForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const payLoad = {};
-      if (catName.value.trim()) {
-        payLoad.catName = catName.value.trim();
-      }
-      if (catGender.value.trim()) {
-        payLoad.catGender = catGender.value.trim();
-      }
-      if (Number(catAge.value) !== NaN) {
-        payLoad.catAge = Number(catAge.value);
-      }
-      if (catBreed.value.trim()) {
-        payLoad.catBreed = catBreed.value.trim();
-      }
-      if (catIsAltered.value.trim()) {
-        payLoad.catIsAltered = catIsAltered.value.trim();
-      }
-      if (catGallery.value.trim()) {
-        payLoad.catGallery = catGallery.value.trim();
-      }
-      if (userBio.value.trim()) {
-        payLoad.userBio = userBio.value.trim();
-      }
-      const adjustData = axios.patch("/api/user/adjust", payLoad);
-    });
-  }
+  let long;
+  let lat;
+  let distance;
 
-  if (deleteButton) {
-    deleteButton.addEventListener("click", async (event) => {
-      event.preventDefault();
-      const deleteTheUser = await axios.delete("/api/user/delete");
-    });
-  }
-};
+  locationBtn.on("click", function (event) {
+    event.preventDefault();
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", afterLoaded);
-} else {
-  afterLoaded();
-}
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (data) => {
+            long = data.coords.longitude;
+            lat = data.coords.latitude;
+            locationResult.text(
+              `Your longitude is ${long} and your latitude is ${lat}`
+            );
+          },
+          (err) => {
+            alert("Issue with Geolocation occured!");
+            throw err;
+          }
+        );
+      } else {
+        alert("Please turn on Geolocation");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Error occured getting your location!");
+    }
+  });
+
+  deleteButton.on("click", function (event) {
+    event.preventDefault();
+    const requestConfig = {
+      method: "DELETE",
+      url: "/api/user/delete",
+    };
+    try {
+      $.ajax(requestConfig).then(function (responseMessage) {
+        console.log(responseMessage);
+      });
+    } catch (error) {
+      console.log(error);
+      alert("Account couldn't be deleted right now!");
+    }
+  });
+
+  adjustForm.submit(function (event) {
+    const payLoad = {};
+    if (catName.val().trim()) {
+      payLoad.catName = catName.val().trim();
+    }
+    if (catGender.val().trim()) {
+      payLoad.catGender = catGender.val().trim();
+    }
+    if (Number(catAge.val()) !== NaN && Number(catAge.val()) > 0) {
+      payLoad.catAge = Number(catAge.val());
+    }
+    if (catBreed.val().trim()) {
+      payLoad.catBreed = catBreed.val().trim();
+    }
+    if (catIsAltered.val().trim()) {
+      payLoad.catIsAltered = catIsAltered.val().trim();
+    }
+    if (catGallery.val().trim()) {
+      payLoad.catGallery = catGallery.val().trim();
+    }
+    if (userBio.val().trim()) {
+      payLoad.userBio = userBio.val().trim();
+    }
+    if (typeof long === "number" && typeof lat === "number") {
+      payLoad.userLocation = [long, lat];
+    }
+    if (Number(filterMiles.val()) !== NaN && Number(filterMiles.val()) > 0) {
+      payLoad.filterMiles = filterMiles;
+    }
+
+    const requestConfig = {
+      method: "PATCH",
+      url: "/api/user/adjust",
+      data: JSON.stringify({
+        ...payLoad,
+      }),
+    };
+    try {
+      $.ajax(requestConfig).then(function (responseMessage) {
+        alert("Update settings complete!");
+      });
+    } catch (error) {
+      alert("Updating settings failed!");
+    }
+    return false;
+  });
+})(window.jQuery);

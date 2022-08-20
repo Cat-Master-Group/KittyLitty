@@ -61,7 +61,10 @@ const authUser = async (email, password) => {
 };
 
 const changeUser = async (user, changeObj) => {
+  // user = {};
+  // user._id = "6300acf7914eac617ac0bc1e";
   const userCollection = await users();
+  userCollection.createIndex({ userLocation: "2dsphere" });
   const currentUser = await getUser(user._id);
   let updateChanges = currentUser;
   if (!updateChanges.userCat) {
@@ -86,6 +89,12 @@ const changeUser = async (user, changeObj) => {
   if (changeObj.userBio) {
     updateChanges.userBio = changeObj.userBio;
   }
+  if (changeObj.userLocation) {
+    updateChanges.userLocation = changeObj.userLocation;
+  }
+  if (changeObj.filterMiles) {
+    updateChanges.filterMiles = changeObj.filterMiles;
+  }
 
   const changedUser = await userCollection.updateOne(
     {
@@ -101,7 +110,18 @@ const changeUser = async (user, changeObj) => {
 
 const getSelectedUsers = async (id) => {
   const userCollection = await users();
+  userCollection.createIndex({ userLocation: "2dsphere" });
   const curUser = await getUser(id);
+
+  let filterMiles = 100000;
+  let coord = [0, 0];
+  if (curUser.filterMiles) {
+    filterMiles = curUser.filterMiles;
+  }
+  if (curUser.userLocation) {
+    coord = curUser.userLocation;
+  }
+
   let blackList = [ObjectId(id)];
   if (curUser.followedUsers) {
     curUser.followedUsers = curUser.followedUsers.map((x) => ObjectId(x));
@@ -126,6 +146,13 @@ const getSelectedUsers = async (id) => {
         },
         blockedUsers: {
           $nin: [ObjectId(id)],
+        },
+        userLocation: {
+          $near: {
+            $geometry: { type: "Point", coordinates: coord },
+            $minDistance: 0,
+            $maxDistance: filterMiles,
+          },
         },
       },
       {
