@@ -28,7 +28,7 @@ async function main() {
     "meow"
   );
   const idOne = userOne._id.toString();
-  await userData.changeUser(idOne, user1);
+  await userData.changeUser(userOne, user1);
 
   const user2 = {
     userId: "8ad9b86e-bd89-4f1a-8455-728976bb14f6",
