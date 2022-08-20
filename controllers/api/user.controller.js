@@ -1,12 +1,16 @@
 const xss = require("xss");
+
+const { checkId } = require("../../validations");
 const {
   createUser,
   authUser,
   changeUser,
   removeUser,
+  getSelectedUsers,
+  canSwipe,
+  swipe,
   getUser,
 } = require("../../data/user.data");
-const { checkId } = require("../../validations");
 
 const signUp = async (req, res, next) => {
   try {
@@ -14,7 +18,6 @@ const signUp = async (req, res, next) => {
     const email = xss(req.body.email);
     const password = xss(req.body.password);
 
-    console.log(req.body);
     const oneUser = await createUser(userName, email, password);
     console.log(oneUser);
     res.json({ ...oneUser });
@@ -52,12 +55,30 @@ const sendLoginStatus = async (req, res, next) => {
   }
 };
 
+const getUserInfo = async (req, res, next) => {
+  const id = xss(req.params.id);
+
+  try {
+    checkId(id, "_id");
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "Id of user cannot be validated!" });
+  }
+
+  try {
+    const userInfo = await getUser(id);
+    console.log(userInfo);
+    return res.json(userInfo);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error: "User not found" });
+  }
+};
+
 const adjustUser = async (req, res, next) => {
   try {
-    console.log(req.session);
-    console.log(req.body);
-    const updatedUser = changeUser(req.session.user, req.body);
-    res.json(updatedUser);
+    const updatedUser = await changeUser(req.session.user, xss(req.body));
+    return res.json(updatedUser);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -91,6 +112,42 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const availableUsers = async (req, res, next) => {
+  try {
+    const currentUser = req.session.user._id;
+    const list = await getSelectedUsers(currentUser);
+    res.json(list);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
+const swipeUser = async (req, res, next) => {
+  try {
+    const canItSwipe = canSwipe(req.session.user._id, xss(req.body.matchId));
+    if (!canItSwipe) {
+      throw "Cannot Match";
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ message: "User cannot match with this person" });
+  }
+  try {
+    const { _id } = req.session.user;
+    const matchId = xss(req.body.matchId);
+    const result = swipe(_id, matchId);
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+};
+
+//Add swipe function
+
 module.exports = {
   signUp,
   signIn,
@@ -98,4 +155,7 @@ module.exports = {
   adjustUser,
   sendLoginStatus,
   deleteUser,
+  availableUsers,
+  swipeUser,
+  getUserInfo,
 };

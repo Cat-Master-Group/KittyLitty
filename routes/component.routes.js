@@ -14,4 +14,9 @@ router.get("/settings", function (req, res, next) {
   componentController.loadSettings(req, res, next);
 });
 
+//swipe
+router.get("/available", function (req, res, next) {
+  componentController.available(req, res, next);
+});
+
 module.exports = router;

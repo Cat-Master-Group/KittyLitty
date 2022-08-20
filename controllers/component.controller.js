@@ -25,4 +25,14 @@ module.exports = {
     renderData.script = true;
     res.render("components/settings", renderData);
   },
+
+  //Swipe
+  available(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    renderData.axios = req.query.axios;
+    renderData.componentname = "available";
+    renderData.script = true;
+    res.render("components/available", renderData);
+  },
 };
