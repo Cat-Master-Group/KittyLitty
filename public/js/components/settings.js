@@ -5,7 +5,9 @@
   const catAge = $("#catAge");
   const catBreed = $("#catBreed");
   const catIsAltered = $("#catIsAltered");
-  const catGallery = $("#catGallery");
+  const catGallery1 = $("#catGallery1");
+  const catGallery2 = $("#catGallery2");
+  const catGallery3 = $("#catGallery3");
   const userBio = $("#userBio");
   const deleteButton = $("#delete");
   const locationBtn = $("#locationBtn");
@@ -42,8 +44,16 @@
         if (catObj.catIsAltered) {
           catIsAltered.val(catObj.catIsAltered);
         }
-        if (catObj.catGallery && catObj.catGallery.length > 0) {
-          catGallery.val(catObj.catGallery);
+        if (catObj.catGallery && Array.isArray(catObj.catGallery)) {
+          if (catObj.catGallery[0]) {
+            catGallery1.val(catObj.catGallery[0]);
+          }
+          if (catObj.catGallery[1]) {
+            catGallery2.val(catObj.catGallery[1]);
+          }
+          if (catObj.catGallery[2]) {
+            catGallery3.val(catObj.catGallery[2]);
+          }
         }
       }
       if (response.userBio) {
@@ -113,6 +123,8 @@
 
   adjustForm.submit(function (event) {
     const payLoad = {};
+    const catPic = Array(3);
+    console.log(catPic);
     if (catName.val().trim()) {
       payLoad.catName = catName.val().trim();
     }
@@ -128,8 +140,14 @@
     if (catIsAltered.val().trim()) {
       payLoad.catIsAltered = catIsAltered.val().trim();
     }
-    if (catGallery.val().trim()) {
-      payLoad.catGallery = catGallery.val().trim();
+    if (catGallery1.val().trim()) {
+      catPic[0] = catGallery1.val().trim();
+    }
+    if (catGallery2.val().trim()) {
+      catPic[1] = catGallery2.val().trim();
+    }
+    if (catGallery3.val().trim()) {
+      catPic[2] = catGallery3.val().trim();
     }
     if (userBio.val().trim()) {
       payLoad.userBio = userBio.val().trim();
@@ -141,6 +159,7 @@
     if (Number(filterMiles.val()) !== NaN && Number(filterMiles.val()) > 0) {
       payLoad.filterMiles = filterMiles.val();
     }
+    payLoad.catGallery = catPic;
 
     const requestConfig = {
       method: "PATCH",
