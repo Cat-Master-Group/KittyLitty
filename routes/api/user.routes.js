@@ -43,4 +43,8 @@ router.patch("/swipe", function (req, res, next) {
   swipeUser(req, res, next);
 });
 
+router.patch("/addcomment", function (req, res, next) {
+  addComment(req, res, next);
+});
+
 module.exports = router;
