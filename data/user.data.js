@@ -64,7 +64,7 @@ const changeUser = async (user, changeObj) => {
   // user = {};
   // user._id = "6300acf7914eac617ac0bc1e";
   const userCollection = await users();
-  userCollection.createIndex({ userLocation: "2dsphere" });
+  // userCollection.createIndex({ userLocation: "2dsphere" });
   const currentUser = await getUser(user._id);
   let updateChanges = currentUser;
   if (!updateChanges.userCat) {
@@ -110,7 +110,7 @@ const changeUser = async (user, changeObj) => {
 
 const getSelectedUsers = async (id) => {
   const userCollection = await users();
-  userCollection.createIndex({ userLocation: "2dsphere" });
+  // userCollection.createIndex({ userLocation: "2dsphere" });
   const curUser = await getUser(id);
 
   let filterMiles = 100000;
@@ -141,19 +141,19 @@ const getSelectedUsers = async (id) => {
         _id: {
           $nin: blackList,
         },
-        followedUsers: {
+        friendedUsers: {
           $nin: [ObjectId(id)],
         },
         blockedUsers: {
           $nin: [ObjectId(id)],
         },
-        userLocation: {
-          $near: {
-            $geometry: { type: "Point", coordinates: coord },
-            $minDistance: 0,
-            $maxDistance: filterMiles,
-          },
-        },
+        // userLocation: {
+        //   $near: {
+        //     $geometry: { type: "Point", coordinates: coord },
+        //     $minDistance: 0,
+        //     $maxDistance: filterMiles,
+        //   },
+        // },
       },
       {
         projection: {
@@ -204,10 +204,18 @@ const swipe = async (id, matchId) => {
   const curUser = await getUser(id);
   const matchUser = await getUser(matchId);
 
-  if (
-    matchUser.followedUsers &&
-    matchUser.followedUsers.indexOf(ObjectId(id)) >= 0
-  ) {
+  let inMatchFollowerList = false;
+  if (matchUser.followedUsers && matchUser.followedUsers.length > 0) {
+    for (let i = 0; i < matchUser.followedUsers.length; i++) {
+      const curFollower = matchUser.followedUsers[i].toString();
+      if (curFollower === id) {
+        inMatchFollowerList = true;
+        break;
+      }
+    }
+  }
+
+  if (inMatchFollowerList) {
     let userFriendList = [];
     if (curUser.friendedUsers) {
       userFriendList = [...curUser.friendedUsers];
@@ -222,14 +230,19 @@ const swipe = async (id, matchId) => {
     const matchFollowListIndex = matchUser.followedUsers.indexOf(ObjectId(id));
     matchUser.followedUsers.splice(matchFollowListIndex);
 
-    const updateCurUser = userCollection.findOneAndUpdate(
+    const updateCurUser = await userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: { friendedUsers: userFriendList } }
     );
 
-    const updateMatchUser = userCollection.findOneAndUpdate(
+    const updateMatchUser = await userCollection.findOneAndUpdate(
       { _id: ObjectId(matchId) },
-      { $set: { friendedUsers: matchFriendList, followedUsers: matchFollow } }
+      {
+        $set: {
+          friendedUsers: matchFriendList,
+          followedUsers: matchUser.followedUsers,
+        },
+      }
     );
 
     if (!updateCurUser || !updateMatchUser) {
@@ -242,7 +255,7 @@ const swipe = async (id, matchId) => {
       curFollowerList = [...curUser.followedUsers];
     }
     curFollowerList.push(ObjectId(matchId));
-    const updateCurUser = userCollection.findOneAndUpdate(
+    const updateCurUser = await userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
       { $set: { followedUsers: curFollowerList } }
     );
