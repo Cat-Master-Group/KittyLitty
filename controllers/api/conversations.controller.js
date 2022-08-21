@@ -9,10 +9,6 @@ const conversationsList = async (req, res, next) => {
   const peopleDir = {};
   try {
     const id = req.session.user._id;
-    // const id = "630017a87c6906051e104b43";
-    // const id = "630017a87c6906051e104b43";
-    // const id = "630017a87c6906051e104b43";
-    // const id = "63015c350450150ae94382bb"; // kitty_litty_dev1
     const conversations = await getAllUserConversations(id);
     if (conversations) {
       for (let i = 0; i < conversations.length; i++) {
@@ -48,7 +44,6 @@ const conversationsList = async (req, res, next) => {
 };
 
 const getSingleConversation = async (req, res, next) => {
-  // const id = "63001fd4a6b8031be467936f";
   const id = req.params.id;
 
   try {
@@ -69,7 +64,6 @@ const sendMessage = async (req, res, next) => {
     const conversationId = req.params.id;
 
     const singleMessage = await insertMessage(id, conversationId, message);
-
     return res.status(200).json(singleMessage);
   } catch (error) {
     console.log(error);
