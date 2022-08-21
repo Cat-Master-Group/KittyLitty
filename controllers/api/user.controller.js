@@ -106,10 +106,9 @@ const adjustUser = async (req, res, next) => {
     for (let key in payLoad) {
       changeObj[key] = xss(payLoad[key]);
     }
-    const updatedUser = await changeUser(req.session.user, changeObj);
+    const updatedUser = await userdb.changeUser(req.session.user, changeObj);
     delete updatedUser.email;
     delete updatedUser.password;
-    console.log(updatedUser);
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
