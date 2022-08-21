@@ -105,6 +105,10 @@ const changeUser = async (user, changeObj) => {
   if (changeObj.catIsAltered) {
     updateChanges.userCat.catIsAltered = changeObj.catIsAltered;
   }
+  if (changeObj.catGallery) {
+    const catArr = changeObj.catGallery.split(",");
+    updateChanges.userCat.catGallery = catArr;
+  }
   if (changeObj.userBio) {
     updateChanges.userBio = changeObj.userBio;
   }
