@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const mongoCollections = require("../config/mongoCollections");
+const { getUser } = require("./user.data");
 const { conversations } = mongoCollections;
 
 const createConversation = async (arrUsers) => {
@@ -19,11 +20,11 @@ const createConversation = async (arrUsers) => {
   if (insertConversation.insertedCount === 0)
     throw "COULD NOT ADD CONVERSATION";
   const newConversationId = insertConversation.insertedId;
-  const conversation = await getConversationId(newConversationId.toString());
+  const conversation = await getConversation(newConversationId.toString());
   return conversation;
 };
 
-const getConversationId = async (id) => {
+const getConversation = async (id) => {
   if (!id) throw "INVALID CONVERSATION ID";
   const conversationCollection = await conversations();
 
@@ -49,7 +50,7 @@ const getParticipantId = async (participantId) => {
   return singularParticipant;
 };
 
-const getUserConversations = async (id) => {
+const getAllUserConversations = async (id) => {
   const conversationCollection = await conversations();
   const allConversations = await conversationCollection
     .find({
@@ -95,13 +96,14 @@ const insertMessage = async (id, conversationID, message) => {
   if (!updateConversation.matchedCount && !updateConversation.modifiedCount) {
     throw `COULD NOT UPDATE MESSAGES.\n`;
   }
-  return await getConversationId(conversationID);
+
+  return await getConversation(conversationID);
 };
 
 module.exports = {
   createConversation,
-  getConversationId,
+  getConversation,
   getParticipantId,
-  getUserConversations,
+  getAllUserConversations,
   insertMessage,
 };

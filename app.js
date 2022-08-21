@@ -38,9 +38,7 @@ app.use(
 
 //Middleware
 app.use("*", async (req, res, next) => {
-  req.session.user = {
-    _id: "63019a61252ad06186ae0138",
-  };
+  req.session.user = { _id: "63016ce5a37f207d4e4426d4" };
 
   console.log(
     `[${dateColor(`${new Date().toUTCString()}`)}]: 

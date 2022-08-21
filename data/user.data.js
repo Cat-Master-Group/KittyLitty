@@ -29,10 +29,20 @@ const createUser = async (userName, email, unHashedPassword) => {
 
 const getUser = async (id) => {
   const userCollection = await users();
-  const oneUser = await userCollection.findOne({ _id: ObjectId(id) });
+  const oneUser = await userCollection.findOne(
+    { _id: ObjectId(id) },
+    {
+      projection: {
+        _id: true,
+        userName: true,
+      },
+    }
+  );
   if (!oneUser) {
     throw "User not found";
   }
+
+  // console.log("ALL USERS HERE", await userCollection.find({}).toArray());
   return oneUser;
 };
 
@@ -215,7 +225,6 @@ const swipe = async (id, matchId) => {
       }
     }
   }
-  console.log(inMatchFollowerList);
 
   if (inMatchFollowerList) {
     let userFriendList = [];

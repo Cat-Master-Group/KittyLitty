@@ -10,7 +10,7 @@
 
   const requestConfig = {
     method: "GET",
-    url: "/api/conversation/messages/",
+    url: "/api/conversation/messages/all",
   };
 
   // current active user
@@ -19,7 +19,6 @@
       convoList = responseConversations.conversations;
       peopleDir = responseConversations.peopleDir;
       id = responseConversations.id;
-      
       console.log(responseConversations);
 
       convoList.map((c) => {

@@ -59,10 +59,24 @@ async function loadSettings() {
     params: {
       axios: true,
     },
-  }
+  };
 
   axios(requestConfig).then(replaceContentDiv);
 }
+
+async function loadMessages() {
+  const requestConfig = {
+    method: "GET",
+    url: "api/conversation/messages/all",
+    params: {
+      axios: true,
+    },
+  };
+
+  axios(requestConfig).then(replaceContentDiv);
+}
+
+loadMessages();
 
 //Helper Methods
 function replaceContentDiv(responseMessage) {
@@ -74,10 +88,11 @@ function replaceContentDiv(responseMessage) {
 
 function setInnerHTML(elm, html) {
   elm.innerHTML = html;
-  Array.from(elm.querySelectorAll("script")).forEach(oldScript => {
+  Array.from(elm.querySelectorAll("script")).forEach((oldScript) => {
     const newScript = document.createElement("script");
-    Array.from(oldScript.attributes)
-      .forEach(attr => newScript.setAttribute(attr.name, attr.value));
+    Array.from(oldScript.attributes).forEach((attr) =>
+      newScript.setAttribute(attr.name, attr.value)
+    );
     newScript.appendChild(document.createTextNode(oldScript.innerHTML));
     oldScript.parentNode.replaceChild(newScript, oldScript);
   });

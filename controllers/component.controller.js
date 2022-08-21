@@ -39,7 +39,6 @@ module.exports = {
   loadMessages(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    // renderData.axios = req.query.axios;
     renderData.componentname = "messages";
     renderData.script = true;
     res.render("components/messages", renderData);
