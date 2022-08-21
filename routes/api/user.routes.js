@@ -11,6 +11,7 @@ const {
   getUserInfo,
   getCurrentUserId,
   signOut,
+  getUserSettingInfo,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -24,6 +25,10 @@ router.post("/signin", function (req, res, next) {
 router.get("/signout", function (req, res, next) {
   signOut(req, res, next);
 })
+
+router.get("/setting", function (req, res, next) {
+  getUserSettingInfo(req, res, next);
+});
 
 router.patch("/adjust", function (req, res, next) {
   adjustUser(req, res, next);

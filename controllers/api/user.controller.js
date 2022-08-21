@@ -86,6 +86,19 @@ const getUserInfo = async (req, res, next) => {
   }
 };
 
+const getUserSettingInfo = async (req, res, next) => {
+  try {
+    const userInfo = await getUser(req.session.user._id);
+    delete userInfo.password;
+    delete userInfo.email;
+    res.json(userInfo);
+  } catch (error) {
+    res
+      .status(403)
+      .json({ error, message: "Not allowed to access the user info!" });
+  }
+};
+
 const adjustUser = async (req, res, next) => {
   try {
     const { payLoad } = JSON.parse(req.body.json);
@@ -187,4 +200,5 @@ module.exports = {
   getUserInfo,
   getCurrentUserId,
   addComment,
+  getUserSettingInfo,
 };
