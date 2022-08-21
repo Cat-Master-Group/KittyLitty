@@ -155,6 +155,10 @@ const swipeUser = async (req, res, next) => {
 
 //Add swipe function
 
+const addComment = async (req, res, next) => {
+  //TODO addComment method to go with user.routes.js
+}
+
 module.exports = {
   signUp,
   signIn,
@@ -165,4 +169,5 @@ module.exports = {
   availableUsers,
   swipeUser,
   getUserInfo,
+  addComment,
 };
