@@ -82,22 +82,23 @@
     if (userBio.val().trim()) {
       payLoad.userBio = userBio.val().trim();
     }
+
     if (typeof long === "number" && typeof lat === "number") {
       payLoad.userLocation = [long, lat];
     }
     if (Number(filterMiles.val()) !== NaN && Number(filterMiles.val()) > 0) {
-      payLoad.filterMiles = filterMiles;
+      payLoad.filterMiles = filterMiles.val();
     }
 
     const requestConfig = {
       method: "PATCH",
       url: "/api/user/adjust",
-      data: JSON.stringify({
-        ...payLoad,
-      }),
+      data: { json: JSON.stringify({ payLoad }) },
+      dataType: "json",
     };
     try {
       $.ajax(requestConfig).then(function (responseMessage) {
+        console.log(responseMessage);
         alert("Update settings complete!");
       });
     } catch (error) {
