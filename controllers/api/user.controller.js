@@ -170,6 +170,10 @@ const getCurrentUserId = (req, res, next) => {
 
 //Add swipe function
 
+const addComment = async (req, res, next) => {
+  //TODO addComment method to go with user.routes.js
+}
+
 module.exports = {
   signUp,
   signIn,
@@ -181,4 +185,5 @@ module.exports = {
   swipeUser,
   getUserInfo,
   getCurrentUserId,
+  addComment,
 };
