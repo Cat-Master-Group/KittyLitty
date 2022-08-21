@@ -60,4 +60,12 @@ module.exports = {
     renderData.script = true;
     res.render("components/available", renderData);
   },
+
+  loadMessages(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    renderData.componentname = "messages";
+    renderData.script = true;
+    res.render("components/messages", renderData);
+  },
 };

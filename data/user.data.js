@@ -2,6 +2,7 @@ const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const mongoCollections = require("../config/mongoCollections");
 const { checkId } = require("../validations");
+const { createConversation } = require("./conversations.data");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
@@ -28,10 +29,20 @@ const createUser = async (userName, email, unHashedPassword) => {
 
 const getUser = async (id) => {
   const userCollection = await users();
-  const oneUser = await userCollection.findOne({ _id: ObjectId(id) });
+  const oneUser = await userCollection.findOne(
+    { _id: ObjectId(id) },
+    {
+      projection: {
+        _id: true,
+        userName: true,
+      },
+    }
+  );
   if (!oneUser) {
     throw "User not found";
   }
+
+  // console.log("ALL USERS HERE", await userCollection.find({}).toArray());
   return oneUser;
 };
 
@@ -248,6 +259,7 @@ const swipe = async (id, matchId) => {
     if (!updateCurUser || !updateMatchUser) {
       throw "Match unsuccessful!";
     }
+    await createConversation([id, matchId]);
     return [updateCurUser, updateMatchUser];
   } else {
     let curFollowerList = [];

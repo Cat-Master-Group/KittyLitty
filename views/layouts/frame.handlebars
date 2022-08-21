@@ -1,25 +1,27 @@
-<!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>KittyLitty</title>
-</head>
+    <link rel="stylesheet" href="/public/css/main.css" />
+  </head>
 
-<body>
+  <body>
     <header>
     </header>
     <main>
-        {{{ body }}}
+      {{{body}}}
     </main>
     <footer>
-        <span>CS546-WS</span>
+      <span>CS546-WS</span>
     </footer>
-</body>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://rawgit.com/leizongmin/js-xss/master/dist/xss.js"></script>
-{{#if script}}
-<script src="/public/js/{{framename}}.js"></script>
-{{/if}}
+  </body>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script
+    src="https://rawgit.com/leizongmin/js-xss/master/dist/xss.js"
+  ></script>
+  {{#if script}}
+    <script src="/public/js/{{framename}}.js"></script>
+  {{/if}}
 
 </html>

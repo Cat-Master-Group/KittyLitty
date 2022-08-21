@@ -23,4 +23,8 @@ router.get("/available", function (req, res, next) {
   componentController.available(req, res, next);
 });
 
+router.get("/messages", function (req, res, next) {
+  componentController.loadMessages(req, res, next);
+});
+
 module.exports = router;

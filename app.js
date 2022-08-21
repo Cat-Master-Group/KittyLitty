@@ -38,15 +38,12 @@ app.use(
 
 //Middleware
 app.use("*", async (req, res, next) => {
-  // req.session.user = {
-  //   _id: "630170fdf5a7fcc9c4bb868f",
-  // };
+  req.session.user = { _id: "63019a61252ad06186ae0138" };
 
   console.log(
-    `[${dateColor(`${new Date().toUTCString()}`)}]: 
-    ${methodColor(req.method)} 
-    ${urlColor(req.originalUrl)} 
-    (${
+    `[${dateColor(`${new Date().toUTCString()}`)}]: ${methodColor(
+      req.method
+    )} ${urlColor(req.originalUrl)} (${
       req.session.user
         ? authColor(`Authenticated User`)
         : nonAuthColor("Non-Authenticated User")

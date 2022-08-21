@@ -1,0 +1,39 @@
+.right {
+  /* color: #6c5ce7; */
+  background-color: #6c5ce7;
+  text-align: right;
+  align-items: flex-start;
+  margin-left: 25%;
+}
+.left {
+  color: #fd79a8;
+  text-align: left;
+  background-color: #ff3333;
+  text-align: left;
+  margin-right: 25%;
+}
+
+body {
+  background-color: #00cec9;
+}
+
+.messageText {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 3.5vh;
+  padding: 1rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.9rem;
+  /* width: auto;
+  color: ivory;
+  /* background-color: #ff3333; */
+  /* display: table-cell; */
+}
+
+.senderId {
+  background-color: transparent;
+}
+
+#messageList {
+  list-style-type: none;
+}
