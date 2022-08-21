@@ -109,6 +109,7 @@ const adjustUser = async (req, res, next) => {
     const updatedUser = await changeUser(req.session.user, changeObj);
     delete updatedUser.email;
     delete updatedUser.password;
+    console.log(updatedUser);
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
