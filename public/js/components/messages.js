@@ -8,9 +8,9 @@
   let convoList = [];
   let id;
   let curConvo;
-  let curMessageList;
+  let currMessageList;
 
-  const syncInterval = 1000 * 2;
+  const syncInterval = 1000 * 1;
   let grabFail = false;
 
   const requestConfig = {
@@ -35,7 +35,6 @@
               otherUser = c.participants[0];
             }
           } else {
-            // otherUser =
           }
           conversationList.append(
             `<li><button class="convo" value=${c._id}>${peopleDir[otherUser]}</button></li>`
@@ -70,7 +69,7 @@
       patchRequestConfig.data = { messages: enterMessage.val() };
       try {
         $.ajax(patchRequestConfig).then(function (response) {
-          curMessageList = response.messages;
+          currMessageList = response.messages;
           populateMessages();
         });
       } catch (error) {
@@ -90,25 +89,22 @@
       }
     };
     let index = convoList.findIndex(findConvo);
-    curMessageList = convoList[index].messages;
+    currMessageList = convoList[index].messages;
 
     populateMessages();
   });
 
   const populateMessages = () => {
     messageList.empty();
-    for (let i = 0; i < curMessageList.length; i++) {
-      const curMessage = curMessageList[i];
-      messageList.append(
-        `<li class=${curMessage.senderId === id ? "right" : "left"}>${
-          curMessage.messageText
-        }</li>`
-      );
-      messageList.append(
-        `<li class=${curMessage.senderId === id ? "right" : "left"}>${
-          peopleDir[curMessage.senderId]
-        }</li>`
-      );
+    for (let i = 0; i < currMessageList.length; i++) {
+      const currMessage = currMessageList[i];
+      $(`<li class=messageText>${currMessage.messageText}</li>`)
+        .appendTo(messageList)
+        .addClass(`${currMessage.senderId === id ? "right" : "left"}`);
+
+      $(`<li class=senderId>${peopleDir[currMessage.senderId]}</li>`)
+        .appendTo(messageList)
+        .addClass(`${currMessage.senderId === id ? "right" : "left"}`);
     }
   };
 })(window.jQuery);
