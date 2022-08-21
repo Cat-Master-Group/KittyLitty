@@ -16,6 +16,58 @@
   let lat;
   let distance;
 
+  console.log("B");
+  try {
+    console.log("A");
+    const requestConfig = { method: "GET", url: "/api/user/setting" };
+    $.ajax(requestConfig).then(function (response) {
+      console.log(response);
+      if (response.userCat) {
+        const catObj = response.userCat;
+        if (catObj.catName) {
+          catName.val(catObj.catName);
+        }
+        if (catObj.catGender) {
+          catGender.val(catObj.catGender);
+        }
+        if (catObj.catAge) {
+          catAge.val(catObj.catAge);
+        }
+        if (catObj.catIsAltered) {
+          catIsAltered.val(catObj.catIsAltered);
+        }
+        if (catObj.catBreed) {
+          catBreed.val(catObj.catBreed);
+        }
+        if (catObj.catIsAltered) {
+          catIsAltered.val(catObj.catIsAltered);
+        }
+        if (catObj.catGallery && catObj.catGallery.length > 0) {
+          catGallery.val(catObj.catGallery);
+        }
+      }
+      if (response.userBio) {
+        userBio.val(response.userBio);
+      }
+      if (
+        response.userLocation &&
+        response.userLocation.coordinates &&
+        response.userLocation.coordinates.length == 2
+      ) {
+        const long = response.userLocation.coordinates[0];
+        const lat = response.userLocation.coordinates[1];
+        locationResult.text(
+          `Your longitude is ${long} and your latitude is ${lat}`
+        );
+      }
+      if (response.filterMiles) {
+        filterMiles.val(response.filterMiles);
+      }
+    });
+  } catch (error) {
+    alert("Please fill in your information!");
+  }
+
   locationBtn.on("click", function (event) {
     event.preventDefault();
 
