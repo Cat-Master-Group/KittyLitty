@@ -116,7 +116,7 @@ const changeUser = async (user, changeObj) => {
   ) {
     updateChanges.userLocation = {
       type: "Point",
-      coordinates: [0, 0],
+      coordinates: changeObj.userLocation,
     };
   }
   if (changeObj.filterMiles && Number(changeObj.filterMiles)) {
