@@ -96,6 +96,7 @@ const adjustUser = async (req, res, next) => {
     const updatedUser = await userdb.changeUser(req.session.user, changeObj);
     delete updatedUser.email;
     delete updatedUser.password;
+    console.log(updatedUser);
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
@@ -172,7 +173,7 @@ const getCurrentUserId = (req, res, next) => {
 
 const addComment = async (req, res, next) => {
   //TODO addComment method to go with user.routes.js
-}
+};
 
 module.exports = {
   signUp,
