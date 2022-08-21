@@ -14,6 +14,10 @@ router.get("/settings", function (req, res, next) {
   componentController.loadSettings(req, res, next);
 });
 
+router.get("/catInfo/:id", function (req, res, next) {
+  componentController.loadCatInfo(req, res, next);
+});
+
 //swipe
 router.get("/available", function (req, res, next) {
   componentController.available(req, res, next);

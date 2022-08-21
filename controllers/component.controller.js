@@ -1,3 +1,6 @@
+const user = require("../data/user.data")
+
+
 module.exports = {
   loadSignin(req, res, next) {
     const renderData = {};
@@ -24,6 +27,28 @@ module.exports = {
     renderData.componentname = "settings";
     renderData.script = true;
     res.render("components/settings", renderData);
+  },
+
+  loadCatInfo(req, res, next) {
+
+    let id = req.params.id
+    let userInfo = {}
+    userInfo = user.getUser(id);
+
+    const p = Promise.resolve(userInfo);
+
+    p.then(value => {
+      
+      userInfo = value;
+      const catInfo = userInfo.userCat;
+      const renderData = {};
+      renderData.layout = "component";
+      renderData.axios = req.query.axios;
+      renderData.componentname = "catInfo";
+      renderData.script = true;
+      renderData.catInfo = catInfo;
+      res.render("components/catInfo", {renderData});
+    })
   },
 
   //Swipe
