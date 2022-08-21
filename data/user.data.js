@@ -65,7 +65,7 @@ const authUser = async (email, password) => {
 
 const changeUser = async (user, changeObj) => {
   const userCollection = await users();
-  // userCollection.createIndex({ userLocation: "2dsphere" });
+  userCollection.createIndex({ userLocation: "2dsphere" });
   const currentUser = await getUser(user._id);
   let updateChanges = currentUser;
   if (!updateChanges.userCat) {
@@ -101,7 +101,10 @@ const changeUser = async (user, changeObj) => {
     changeObj.userLocation[0] !== NaN &&
     changeObj.userLocation[1] !== NaN
   ) {
-    updateChanges.userLocation = changeObj.userLocation;
+    updateChanges.userLocation = {
+      type: "Point",
+      coordinates: [0, 0],
+    };
   }
   if (changeObj.filterMiles && Number(changeObj.filterMiles)) {
     updateChanges.filterMiles = Number(changeObj.filterMiles);
@@ -122,16 +125,17 @@ const changeUser = async (user, changeObj) => {
 
 const getSelectedUsers = async (id) => {
   const userCollection = await users();
-  // userCollection.createIndex({ userLocation: "2dsphere" });
+  userCollection.createIndex({ userLocation: "2dsphere" });
   const curUser = await getUser(id);
 
-  let filterMiles = 100000;
-  let coord = [0, 0];
+  // let filterMiles = 100000;
+  let coord;
+
   if (curUser.filterMiles) {
     filterMiles = curUser.filterMiles;
   }
   if (curUser.userLocation) {
-    coord = curUser.userLocation;
+    coord = curUser.userLocation.coordinates;
   }
 
   let blackList = [ObjectId(id)];
@@ -159,13 +163,13 @@ const getSelectedUsers = async (id) => {
         blockedUsers: {
           $nin: [ObjectId(id)],
         },
-        // userLocation: {
-        //   $near: {
-        //     $geometry: { type: "Point", coordinates: coord },
-        //     $minDistance: 0,
-        //     $maxDistance: filterMiles,
-        //   },
-        // },
+        userLocation: {
+          $near: {
+            $geometry: { type: "Point", coordinates: coord },
+            $minDistance: 0,
+            $maxDistance: filterMiles,
+          },
+        },
       },
       {
         projection: {
