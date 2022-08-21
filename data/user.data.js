@@ -27,11 +27,7 @@ const createUser = async (payload) => {
 
 const getUser = async (id) => {
   const userCollection = await users();
-  const oneUser = await userCollection.findOne(
-    { _id: ObjectId(id) },
-    {
-    }
-  );
+  const oneUser = await userCollection.findOne({ _id: ObjectId(id) });
   if (!oneUser) {
     throw "User not found";
   }
@@ -81,14 +77,17 @@ const authUser = async (email, password) => {
 };
 
 const changeUser = async (user, changeObj) => {
-  // user = {};
-  // user._id = "6300acf7914eac617ac0bc1e";
   const userCollection = await users();
   // userCollection.createIndex({ userLocation: "2dsphere" });
   const currentUser = await getUser(user._id);
   let updateChanges = currentUser;
   if (!updateChanges.userCat) {
     updateChanges.userCat = {};
+  }
+  if (typeof changeObj.userLocation === "string") {
+    changeObj.userLocation = changeObj.userLocation.split(",");
+    changeObj.userLocation[0] = Number(changeObj.userLocation[0]);
+    changeObj.userLocation[1] = Number(changeObj.userLocation[1]);
   }
 
   if (changeObj.catName) {
@@ -97,8 +96,8 @@ const changeUser = async (user, changeObj) => {
   if (changeObj.catGender) {
     updateChanges.userCat.catGender = changeObj.catGender;
   }
-  if (changeObj.catAge) {
-    updateChanges.userCat.catAge = changeObj.catAge;
+  if (changeObj.catAge && Number(changeObj.catAge)) {
+    updateChanges.userCat.catAge = Number(changeObj.catAge);
   }
   if (changeObj.catBreed) {
     updateChanges.userCat.catBreed = changeObj.catBreed;
@@ -109,11 +108,16 @@ const changeUser = async (user, changeObj) => {
   if (changeObj.userBio) {
     updateChanges.userBio = changeObj.userBio;
   }
-  if (changeObj.userLocation) {
+  if (
+    changeObj.userLocation &&
+    changeObj.userLocation.length === 2 &&
+    changeObj.userLocation[0] !== NaN &&
+    changeObj.userLocation[1] !== NaN
+  ) {
     updateChanges.userLocation = changeObj.userLocation;
   }
-  if (changeObj.filterMiles) {
-    updateChanges.filterMiles = changeObj.filterMiles;
+  if (changeObj.filterMiles && Number(changeObj.filterMiles)) {
+    updateChanges.filterMiles = Number(changeObj.filterMiles);
   }
 
   const changedUser = await userCollection.updateOne(
@@ -125,6 +129,7 @@ const changeUser = async (user, changeObj) => {
   if (!changedUser.matchedCount && !changedUser.modifiedCount) {
     throw "Update failed";
   }
+
   return await getUser(user._id);
 };
 

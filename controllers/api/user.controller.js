@@ -88,12 +88,14 @@ const getUserInfo = async (req, res, next) => {
 
 const adjustUser = async (req, res, next) => {
   try {
+    const { payLoad } = JSON.parse(req.body.json);
     const changeObj = {};
-    for (let key in req.body) {
-      changeObj[key] = xss(changeObj[key]);
+    for (let key in payLoad) {
+      changeObj[key] = xss(payLoad[key]);
     }
-    console.log(req.body);
-    const updatedUser = await userdb.changeUser(req.session.user, xss(req.body));
+    const updatedUser = await userdb.changeUser(req.session.user, changeObj);
+    delete updatedUser.email;
+    delete updatedUser.password;
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
