@@ -9,7 +9,6 @@ const conversationsList = async (req, res, next) => {
   try {
     const id = req.session.user._id;
     const messages = await getUserConversations(id);
-    // console.log("MESSAGES HERE", messages);
     res.status(200).json({ messages });
   } catch (error) {
     console.log(error);

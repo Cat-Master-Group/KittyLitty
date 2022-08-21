@@ -29,6 +29,14 @@ async function main() {
   );
   await userData.changeUser(userOne, user1);
 
+  const userTwo = await userData.createUser(
+    "Richard Parker",
+    "rparker@gmail.com",
+    "meow"
+  );
+  const idTwo = userTwo._id.toString();
+  await userData.changeUser();
+
   const user2 = {
     userId: "8ad9b86e-bd89-4f1a-8455-728976bb14f6",
     userName: "John Smith",
