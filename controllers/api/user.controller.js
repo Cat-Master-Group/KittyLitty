@@ -77,6 +77,11 @@ const getUserInfo = async (req, res, next) => {
 
 const adjustUser = async (req, res, next) => {
   try {
+    const changeObj = {};
+    for (let key in req.body) {
+      changeObj[key] = xss(changeObj[key]);
+    }
+    console.log(req.body);
     const updatedUser = await changeUser(req.session.user, xss(req.body));
     return res.json(updatedUser);
   } catch (error) {
