@@ -34,7 +34,7 @@
       const id = obj._id;
       const requestConfig = {
         method: "GET",
-        url: "/load/cat-info/" + id,
+        url: "/load/user-info/" + id,
       };
       $.ajax(requestConfig).then(function (responseMessage) {
         setInnerHTML(document.getElementById("name"), responseMessage);

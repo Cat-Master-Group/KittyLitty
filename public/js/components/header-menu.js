@@ -12,7 +12,7 @@ document.getElementById("menu-my-profile").addEventListener("click", function ()
         method: "GET",
         url: "/api/user/current-user-id",
     }).then((currentUserId) => {
-        loadCatInfo(currentUserId);
+        loadUserInfo(currentUserId);
     });
 });
 document.getElementById("menu-signout").addEventListener("click", function () {
