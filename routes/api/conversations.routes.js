@@ -10,10 +10,6 @@ router.get("/messages/all", async (req, res, next) => {
   conversationsList(req, res, next);
 });
 
-// router.get("/messages/all", async (req, res, next) => {
-//   conversationsList(req, res, next);
-// });
-
 router.get("/messages/:id", async (req, res, next) => {
   getSingleConversation(req, res, next);
 });
