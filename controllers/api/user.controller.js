@@ -1,8 +1,7 @@
 const xss = require("xss");
 
-const { checkId } = require("../../validations");
+const { checkId, checkString } = require("../../validations");
 const userdb = require("../../data/user.data");
-
 
 const signUp = async (req, res, next) => {
   try {
@@ -17,7 +16,7 @@ const signUp = async (req, res, next) => {
     payload.userCat.catBreed = xss(req.body.userCat.catBreed);
     payload.userCat.catIsAltered = xss(req.body.userCat.catIsAltered);
     payload.userCat.catGallery = [];
-    req.body.userCat.catGallery.forEach(element => {
+    req.body.userCat.catGallery.forEach((element) => {
       payload.userCat.catGallery.push(xss(element));
     });
     payload.userBio = xss(req.body.userBio);
@@ -157,7 +156,10 @@ const availableUsers = async (req, res, next) => {
 
 const swipeUser = async (req, res, next) => {
   try {
-    const canItSwipe = userdb.canSwipe(req.session.user._id, xss(req.body.matchId));
+    const canItSwipe = userdb.canSwipe(
+      req.session.user._id,
+      xss(req.body.matchId)
+    );
     if (!canItSwipe) {
       throw "Cannot Match";
     }
@@ -175,6 +177,31 @@ const swipeUser = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
+  }
+};
+
+const reportUser = async (req, res, next) => {
+  const details = xss(req.body.details);
+  const offendedId = xss(req.body.offendedId);
+  const reason = xss(req.body.reason);
+  const id = req.session.user._id;
+  try {
+    if (offendedId === id) {
+      throw "cannot report yourself";
+    }
+    checkString(details);
+    checkString(reason);
+    checkId(offendedId);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error, message: "Invalid input" });
+  }
+  try {
+    await userdb.reportOneUser();
+    return res.json({ message: "success" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error, message: "fail" });
   }
 };
 
@@ -201,4 +228,5 @@ module.exports = {
   getCurrentUserId,
   addComment,
   getUserSettingInfo,
+  reportUser,
 };

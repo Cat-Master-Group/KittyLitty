@@ -1,16 +1,26 @@
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const mongoCollections = require("../config/mongoCollections");
-const { checkId } = require("../validations");
+const { checkId, checkString } = require("../validations");
 const { createConversation } = require("./conversations.data");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
 const createUser = async (payload) => {
-  if (!payload || !payload.userName || !payload.email || !payload.password ||
-    !payload.userCat || !payload.userCat.catName || !payload.userCat.catGender ||
-    !payload.userCat.catAge || !payload.userCat.catBreed || !payload.userCat.catIsAltered ||
-    !payload.userCat.catGallery || !payload.userBio) {
+  if (
+    !payload ||
+    !payload.userName ||
+    !payload.email ||
+    !payload.password ||
+    !payload.userCat ||
+    !payload.userCat.catName ||
+    !payload.userCat.catGender ||
+    !payload.userCat.catAge ||
+    !payload.userCat.catBreed ||
+    !payload.userCat.catIsAltered ||
+    !payload.userCat.catGallery ||
+    !payload.userBio
+  ) {
     throw "signup incomplete";
   }
 
@@ -40,12 +50,14 @@ const getUserArray = async (userArray, projection) => {
   const userCollection = await users();
   const queryArray = [];
   if (userArray) {
-    userArray.forEach(element => {
+    userArray.forEach((element) => {
       queryArray.push(ObjectId(element));
     });
   }
   if (projection) {
-    return await userCollection.find({ _id: { $in: queryArray } }, projection).toArray();
+    return await userCollection
+      .find({ _id: { $in: queryArray } }, projection)
+      .toArray();
   } else {
     return await userCollection.find({ _id: queryArray }).toArray();
   }
@@ -302,6 +314,51 @@ const swipe = async (id, matchId) => {
   }
 };
 
+const reportOneUser = async (id, offendedId, reason, details) => {
+  checkId(id);
+  checkId(offendedId);
+  checkString(reason);
+  checkString(details);
+  const userCollection = await users();
+  const curUser = await getUser(id);
+  const offUser = await getUser(offendedId);
+
+  const reportObj = {
+    reporterId: ObjectId(id),
+    details,
+    reason,
+  };
+
+  if (!curUser.blockedUsers) {
+    curUser.blockedUsers = [];
+  }
+  curUser.blockedUsers.push(ObjectId(offendedId));
+
+  if (!offUser.userReports) {
+    offUser.userReports = [];
+  }
+  offUser.userReports.push(reportObj);
+
+  const updateCur = await userCollection.updateOne(
+    { _id: ObjectId(id) },
+    {
+      $set: { blockedUsers: curUser.blockedUsers },
+    }
+  );
+
+  const updateOffended = await userCollection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: { userReports: curUser.userReports } }
+  );
+  if (!updateCur.matchedCount && !updateCur.modifiedCount) {
+    throw "Update failed";
+  }
+  if (!updateOffended.matchedCount && !updateOffended.modifiedCount) {
+    throw "Update failed";
+  }
+  return true;
+};
+
 const removeUser = async (id) => {
   const userCollection = await users();
   const deletedUser = userCollection.deleteOne({
@@ -323,4 +380,5 @@ module.exports = {
   canSwipe,
   swipe,
   removeUser,
+  reportOneUser,
 };
