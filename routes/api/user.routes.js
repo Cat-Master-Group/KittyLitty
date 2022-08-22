@@ -9,6 +9,8 @@ const {
   deleteUser,
   swipeUser,
   getUserInfo,
+  getCurrentUserId,
+  signOut,
   getUserSettingInfo,
 } = require("../../controllers/api/user.controller");
 
@@ -19,6 +21,10 @@ router.post("/signup", function (req, res, next) {
 router.post("/signin", function (req, res, next) {
   signIn(req, res, next);
 });
+
+router.get("/signout", function (req, res, next) {
+  signOut(req, res, next);
+})
 
 router.get("/setting", function (req, res, next) {
   getUserSettingInfo(req, res, next);
@@ -32,6 +38,9 @@ router.get("/authcheck", function (req, res, next) {
   sendLoginStatus(req, res, next);
 });
 
+router.get("/current-user-id", function (req, res, next) {
+  getCurrentUserId(req, res, next);
+});
 router.get("/info/:id", function (req, res, next) {
   getUserInfo(req, res, next);
 });
