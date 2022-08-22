@@ -7,8 +7,8 @@
     "start": "node app.js",
     "clean": "node tasks/clean.js",
     "seed": "node tasks/seed.js",
-    "start-dev": "nodemon app.js -dev",
-    "start-dev-no-login": "nodemon app.js -dev -nologin"
+    "start-dev": "nodemon --trace-warnings app.js -dev",
+    "start-dev-no-login": "nodemon --trace-warnings app.js -dev -nologin"
   },
   "author": "CatGroup",
   "license": "ISC",
