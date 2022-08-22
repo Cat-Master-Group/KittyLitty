@@ -62,7 +62,7 @@ module.exports = {
     res.render("components/settings", renderData);
   },
 
-  loadCatInfo(req, res, next) {
+  loadUserInfo(req, res, next) {
     let id = req.params.id;
     let userInfo = {};
     userInfo = userdb.getUser(id);
@@ -72,15 +72,13 @@ module.exports = {
     p.then(value => {
 
       userInfo = value;
-      const catInfo = userInfo.userCat;
-      console.log(catInfo);
       const renderData = {};
       renderData.layout = "component";
       renderData.ajax = req.query.ajax;
-      renderData.componentname = "cat-info";
+      renderData.componentname = "user-info";
       renderData.script = false;
-      renderData.catInfo = catInfo;
-      res.render("components/cat-info", renderData);
+      renderData.userInfo = userInfo;
+      res.render("components/user-info", renderData);
     })
   },
 

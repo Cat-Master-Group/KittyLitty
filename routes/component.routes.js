@@ -22,8 +22,8 @@ router.get("/settings", function (req, res, next) {
   componentController.loadSettings(req, res, next);
 });
 
-router.get("/cat-info/:id", function (req, res, next) {
-  componentController.loadCatInfo(req, res, next);
+router.get("/user-info/:id", function (req, res, next) {
+  componentController.loadUserInfo(req, res, next);
 });
 
 //swipe

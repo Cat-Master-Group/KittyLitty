@@ -85,10 +85,10 @@ function loadFollowed() {
   $.ajax(requestConfig).then(replaceContentDiv);
 }
 
-function loadCatInfo(id) {
+function loadUserInfo(id) {
   const requestConfig = {
     method: "GET",
-    url: "/load/cat-info/" + id,
+    url: "/load/user-info/" + id,
     data: {
       ajax: true,
     },
