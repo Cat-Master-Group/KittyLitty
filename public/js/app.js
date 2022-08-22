@@ -1,17 +1,16 @@
 //Startup Tasks
-async function startup() {
+function startup() {
   //Check if user is logged in
   const requestConfig = {
     method: "GET",
     url: "/api/user/authcheck",
   };
 
-  axios(requestConfig).then(async (responseMessage) => {
+  $.ajax(requestConfig).then((responseMessage) => {
     if (
       responseMessage &&
-      responseMessage.data &&
-      responseMessage.data.login &&
-      responseMessage.data.login == "success"
+      responseMessage.login &&
+      responseMessage.login === "success"
     ) {
       assembleApp();
     } else {
@@ -22,69 +21,130 @@ async function startup() {
 
 startup();
 
+//Helpers
 //Main App Asseembly Function
 function assembleApp() {
-  console.log("assemble app");
+  loadHeaderMenu();
+  loadAvailable();
 }
 
 //Load Component Functions
-async function loadSignin() {
+function loadHeaderMenu() {
+  const requestConfig = {
+    method: "GET",
+    url: "/load/header-menu",
+  };
+
+  $.ajax(requestConfig).then(replaceHeader);
+}
+function loadSignin() {
   const requestConfig = {
     method: "GET",
     url: "/load/signin",
-    params: {
-      axios: true,
-    },
+    data: {
+      ajax: true,
+    }
   };
 
-  axios(requestConfig).then(replaceContentDiv);
+  $.ajax(requestConfig).then(replaceContentDiv);
 }
 
-async function loadSignup() {
+function loadSignup() {
   const requestConfig = {
     method: "GET",
     url: "/load/signup",
-    params: {
-      axios: true,
+    data: {
+      ajax: true,
     },
   };
 
-  axios(requestConfig).then(replaceContentDiv);
+  $.ajax(requestConfig).then(replaceContentDiv);
 }
 
-async function loadSettings() {
+function loadAvailable() {
+  const requestConfig = {
+    method: "GET",
+    url: "/load/available",
+    data: {
+      ajax: true,
+    },
+  };
+
+  $.ajax(requestConfig).then(replaceContentDiv);
+}
+
+function loadFollowed() {
+  const requestConfig = {
+    method: "GET",
+    url: "/load/followed-list",
+    data: {
+      ajax: true,
+    },
+  };
+
+  $.ajax(requestConfig).then(replaceContentDiv);
+}
+
+function loadCatInfo(id) {
+  const requestConfig = {
+    method: "GET",
+    url: "/load/cat-info/" + id,
+    data: {
+      ajax: true,
+    },
+  };
+
+  $.ajax(requestConfig).then(replaceContentDiv);
+}
+
+function loadSettings() {
   const requestConfig = {
     method: "GET",
     url: "/load/settings",
-    params: {
-      axios: true,
+    data: {
+      ajax: true,
     },
   };
 
-  axios(requestConfig).then(replaceContentDiv);
+  $.ajax(requestConfig).then(replaceContentDiv);
 }
 
 async function loadMessages() {
   const requestConfig = {
     method: "GET",
-    url: "api/conversation/messages/all",
-    params: {
-      axios: true,
+    url: "load/messages",
+    data: {
+      ajax: true,
     },
   };
 
-  axios(requestConfig).then(replaceContentDiv);
+  $.ajax(requestConfig).then(replaceContentDiv);
 }
-
-loadMessages();
 
 //Helper Methods
-function replaceContentDiv(responseMessage) {
-  if (responseMessage) {
-    const contentDiv = document.getElementById("content");
-    setInnerHTML(contentDiv, responseMessage.data);
+function replaceElement(element, responseMessage) {
+  if (responseMessage && element) {
+    setInnerHTML(element, responseMessage);
   }
 }
+function replaceContentDiv(responseMessage) {
+  replaceElement(document.getElementById("body-content"), responseMessage);
+}
+
+function replaceHeader(responseMessage) {
+  replaceElement(document.getElementById("header-content"), responseMessage);
+}
+
+function emptyHeader() {
+  emptyElement(document.getElementById("header-content"));
+}
+
+function emptyElement(element) {
+  if (element) {
+    setInnerHTML(element, "");
+  }
+}
+
 
 function setInnerHTML(elm, html) {
   elm.innerHTML = html;
