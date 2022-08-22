@@ -7,6 +7,7 @@ const {
   adjustUser,
   availableUsers,
   deleteUser,
+  reportUsers,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -35,6 +36,9 @@ router.get("/available", function (req, res, next) {
   availableUsers(req, res, next);
 });
 
-//add a router.patch. look at line 20
+//for report
+router.patch("/report", function (req, res, next) {
+  reportUsers(req, res, next);
+});
 
 module.exports = router;

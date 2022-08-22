@@ -18,5 +18,9 @@ router.get("/settings", function (req, res, next) {
 router.get("/available", function (req, res, next) {
   componentController.available(req, res, next);
 });
+//report
+router.get("/report", function (req, res, next) {
+  componentController.available(req, res, next);
+});
 
 module.exports = router;

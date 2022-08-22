@@ -102,7 +102,7 @@ const availableUsers = async (req, res, next) => {
   }
 };
 
-//Add swipe function
+//Report
 
 module.exports = {
   signUp,

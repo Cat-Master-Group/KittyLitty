@@ -2,6 +2,7 @@ const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const mongoCollections = require("../config/mongoCollections");
 const e = require("express");
+const { deleteUser } = require("../controllers/api/user.controller");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
@@ -239,6 +240,19 @@ const checkId = (id, varName) => {
   return id;
 };
 
+const reportUser = async (message, id, reportId) => {
+  // get both users
+  const userCollection = await users();
+  const curUser = await getUser(id);
+  const offendingUser = await getUser(reportId);
+
+  // see if there friends
+  if (curUser.followedUsers === offendingUser.followedUsers) {
+    // remove friend or followers
+    deleteUser(offendingUser);
+  }
+};
+
 const removeUser = async (id) => {
   const userCollection = await users();
   const deletedUser = userCollection.deleteOne({
@@ -258,4 +272,5 @@ module.exports = {
   canSwipe,
   swipe,
   removeUser,
+  reportUser,
 };

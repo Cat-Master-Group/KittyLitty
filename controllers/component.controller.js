@@ -35,4 +35,14 @@ module.exports = {
     renderData.script = true;
     res.render("components/available", renderData);
   },
+
+  //Report?
+  available(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    renderData.axios = req.query.axios;
+    renderData.componentname = "report";
+    renderData.script = true;
+    res.render("components/report", renderData);
+  },
 };

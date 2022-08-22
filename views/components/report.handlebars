@@ -1,0 +1,33 @@
+{{!-- <script id="details-template" type="text/x-handlebars-template">
+  <p>
+  {{userValue}}
+  is reporting
+  {{violatorValue}}
+  under this incident:
+  {{detailValue}}
+  </p>
+</script>; --}}
+
+<div id="reportDiv">
+  <button
+    id="reporting"
+    onclick="window.location='report.handlebars';"
+  >Report</button>
+  <div id="report" hidden>
+    <form id="reportForm">
+
+      <h2>Report User</h2>
+
+      <label for="detailInput">Pick violation:</label>
+      <select name="reason" id="reason">
+        <option value="fake">Fake Account</option>
+        <option value="Spam">Spammer</option>
+        <option value="harass">Harassment</option>
+      </select>
+      <input type="text" name="details" id="details" />
+      <input type="submit" id="submitButton" />
+
+    </form>
+  </div>
+  <div id="submissionInfo"></div>
+</div>
