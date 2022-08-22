@@ -27,17 +27,13 @@ async function main() {
       ],
     },
     userBio: "We found Pi as a stray living in one of our lifeboats...",
-    userLocation: {
-      country: "USA",
-      address1: "1212 Larktown Drive",
-      address2: "Union City, ND",
-    },
     followedUsers: [],
     friendedUsers: [],
     blockedUsers: [],
     userInbox: [],
     userReports: [],
     userComments: [],
+    filterMiles: 1000,
   };
 
   const user1Response = await userCollection.insertOne(user1);
@@ -59,11 +55,6 @@ async function main() {
       ],
     },
     userBio: "Chuckie is tricky little fella who will do anything for a meal.",
-    userLocation: {
-      country: "USA",
-      address1: "1111 Garfield Blvd",
-      address2: "albuquerque, NM",
-    },
     followedUsers: [userIds[0]],
     friendedUsers: [],
     blockedUsers: [],
@@ -81,6 +72,7 @@ async function main() {
         ],
       },
     ],
+    filterMiles: 1000,
   };
 
   user2Response = await userCollection.insertOne(user2);
