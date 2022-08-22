@@ -144,16 +144,15 @@ const getSelectedUsers = async (id) => {
   const userCollection = await users();
   userCollection.createIndex({ userLocation: "2dsphere" });
   const curUser = await getUser(id);
-
   // let filterMiles = 100000;
-  let coord;
-
+  /*
   if (curUser.filterMiles) {
     filterMiles = curUser.filterMiles;
   }
   if (curUser.userLocation) {
     coord = curUser.userLocation.coordinates;
   }
+  */
 
   let blackList = [ObjectId(id)];
   if (curUser.followedUsers) {
@@ -180,6 +179,7 @@ const getSelectedUsers = async (id) => {
         blockedUsers: {
           $nin: [ObjectId(id)],
         },
+        /*
         userLocation: {
           $near: {
             $geometry: { type: "Point", coordinates: coord },
@@ -187,6 +187,7 @@ const getSelectedUsers = async (id) => {
             $maxDistance: filterMiles,
           },
         },
+        */
       },
       {
         projection: {
