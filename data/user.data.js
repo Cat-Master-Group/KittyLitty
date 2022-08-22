@@ -6,21 +6,19 @@ const { createConversation } = require("./conversations.data");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
-const createUser = async (userName, email, unHashedPassword) => {
-  if (!userName || !email || !unHashedPassword) {
-    throw "signIn incomplete";
+const createUser = async (payload) => {
+  if (!payload || !payload.userName || !payload.email || !payload.password ||
+    !payload.userCat || !payload.userCat.catName || !payload.userCat.catGender ||
+    !payload.userCat.catAge || !payload.userCat.catBreed || !payload.userCat.catIsAltered ||
+    !payload.userCat.catGallery || !payload.userBio) {
+    throw "signup incomplete";
   }
 
   const userCollection = await users();
 
-  const password = await bcrypt.hash(unHashedPassword, saltRounds);
+  payload.password = await bcrypt.hash(payload.password, saltRounds);
 
-  const payLoad = {
-    userName,
-    password,
-    email,
-  };
-  const oneUser = await userCollection.insertOne(payLoad);
+  const oneUser = await userCollection.insertOne(payload);
   if (oneUser.insertedCount === 0) {
     throw "Insert failed!";
   }
@@ -32,10 +30,6 @@ const getUser = async (id) => {
   const oneUser = await userCollection.findOne(
     { _id: ObjectId(id) },
     {
-      projection: {
-        _id: true,
-        userName: true,
-      },
     }
   );
   if (!oneUser) {
@@ -44,6 +38,21 @@ const getUser = async (id) => {
 
   // console.log("ALL USERS HERE", await userCollection.find({}).toArray());
   return oneUser;
+};
+
+const getUserArray = async (userArray, projection) => {
+  const userCollection = await users();
+  const queryArray = [];
+  if (userArray) {
+    userArray.forEach(element => {
+      queryArray.push(ObjectId(element));
+    });
+  }
+  if (projection) {
+    return await userCollection.find({ _id: { $in: queryArray } }, projection).toArray();
+  } else {
+    return await userCollection.find({ _id: queryArray }).toArray();
+  }
 };
 
 const getAllUser = async () => {
@@ -293,6 +302,7 @@ const removeUser = async (id) => {
 module.exports = {
   createUser,
   getUser,
+  getUserArray,
   authUser,
   changeUser,
   getSelectedUsers,
