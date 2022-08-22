@@ -1,3 +1,7 @@
 const { checkId } = require("./checkId");
+const { checkString } = require("./checkString");
 
-module.exports = { checkId };
+module.exports = {
+  checkId,
+  checkString,
+};

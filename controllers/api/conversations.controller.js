@@ -4,6 +4,8 @@ const {
   insertMessage,
 } = require("../../data/conversations.data");
 const { getUser } = require("../../data/user.data");
+const { checkId } = require("../../validations");
+const { checkString } = require("../../validations/checkString");
 
 const conversationsList = async (req, res, next) => {
   const peopleDir = {};
@@ -32,7 +34,6 @@ const conversationsList = async (req, res, next) => {
         }
       }
     }
-    console.log(peopleDir);
 
     return res.status(200).json({ conversations, peopleDir, id });
   } catch (error) {
@@ -47,6 +48,13 @@ const getSingleConversation = async (req, res, next) => {
   const id = req.params.id;
 
   try {
+    checkId(id);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error, message: "ID NOT FOUND" });
+  }
+
+  try {
     const conversationId = await getConversation(id);
     return res.status(200).json({ conversationId });
   } catch (error) {
@@ -58,11 +66,26 @@ const getSingleConversation = async (req, res, next) => {
 };
 
 const sendMessage = async (req, res, next) => {
-  try {
-    const id = req.session.user._id;
-    const message = req.body.messages;
-    const conversationId = req.params.id;
+  const id = req.session.user._id;
+  /* XSS for messages and conversationId*/
+  const message = req.body.messages;
+  const conversationId = req.params.id;
 
+  try {
+    checkId(id);
+    checkId(conversationId);
+    await getUser(id);
+    await getConversation(conversationId);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error, message: "ERROR 404: NOT FOUND" });
+  }
+  try {
+    checkString(message);
+  } catch (error) {
+    return res.status(400).json({ error, message: "ERROR 400: Invalid input" });
+  }
+  try {
     const singleMessage = await insertMessage(id, conversationId, message);
     return res.status(200).json(singleMessage);
   } catch (error) {
