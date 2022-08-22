@@ -1,5 +1,4 @@
-const userdb = require("../data/user.data")
-
+const userdb = require("../data/user.data");
 
 module.exports = {
   loadSignin(req, res, next) {
@@ -14,7 +13,7 @@ module.exports = {
   loadSignup(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    renderData.ajax = req.query.ajax
+    renderData.ajax = req.query.ajax;
     renderData.componentname = "signup";
     renderData.script = true;
     res.render("components/signup", renderData);
@@ -23,7 +22,7 @@ module.exports = {
   loadHeaderMenu(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    renderData.ajax = req.query.ajax
+    renderData.ajax = req.query.ajax;
     renderData.componentname = "header-menu";
     renderData.script = true;
     res.render("components/header-menu", renderData);
@@ -32,7 +31,7 @@ module.exports = {
   loadFollowedList(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    renderData.ajax = req.query.ajax
+    renderData.ajax = req.query.ajax;
     renderData.componentname = "followed-list";
     renderData.script = true;
 
@@ -40,23 +39,28 @@ module.exports = {
     projection.projection = {
       _id: true,
       userName: true,
-    }
+    };
 
-    userdb.getUserArray(req.session.user.followedUsers, projection).then((followedUserList) => {
-      renderData.followedUsers = [];
-      if (followedUserList) {
-        followedUserList.forEach(element => {
-          renderData.followedUsers.push({ _id: element._id.toString(), userName: element.userName });
-        });
-      }
-      res.render("components/followed-list", renderData);
-    });
+    userdb
+      .getUserArray(req.session.user.followedUsers, projection)
+      .then((followedUserList) => {
+        renderData.followedUsers = [];
+        if (followedUserList) {
+          followedUserList.forEach((element) => {
+            renderData.followedUsers.push({
+              _id: element._id.toString(),
+              userName: element.userName,
+            });
+          });
+        }
+        res.render("components/followed-list", renderData);
+      });
   },
 
   loadSettings(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    renderData.ajax = req.query.ajax
+    renderData.ajax = req.query.ajax;
     renderData.componentname = "settings";
     renderData.script = true;
     res.render("components/settings", renderData);
@@ -69,24 +73,23 @@ module.exports = {
 
     const p = Promise.resolve(userInfo);
 
-    p.then(value => {
-
+    p.then((value) => {
       userInfo = value;
       const renderData = {};
       renderData.layout = "component";
       renderData.ajax = req.query.ajax;
       renderData.componentname = "user-info";
-      renderData.script = false;
+      renderData.script = true;
       renderData.userInfo = userInfo;
       res.render("components/user-info", renderData);
-    })
+    });
   },
 
   //Swipe
   loadAvailable(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
-    renderData.ajax = req.query.ajax
+    renderData.ajax = req.query.ajax;
     renderData.componentname = "available";
     renderData.script = true;
     res.render("components/available", renderData);
