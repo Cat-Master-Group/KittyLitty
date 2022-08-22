@@ -59,12 +59,10 @@ document.getElementById("signin-form").addEventListener("submit", (event) => {
                 password: filterXSS(document.getElementById("signin-password").value),
             }
         };
-        axios(requestConfig).then((responseMessage) => {
+        $.ajax(requestConfig).then((responseMessage) => {
             if (typeof assembleApp === "function" && typeof loadSignin === "function") {
-                if (responseMessage &&
-                    responseMessage.data &&
-                    responseMessage.data.login &&
-                    responseMessage.data.login == "success") {
+                if (responseMessage.login &&
+                    responseMessage.login == "success") {
                     assembleApp();
                 } else {
                     loadSignin();
