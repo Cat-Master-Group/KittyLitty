@@ -4,12 +4,123 @@
     }
 </style>
 <form id="signup-form">
-    <label for="signup-username">Username: <span id="signup-username-error" class="error-text"></span></label><br>
-    <input type="text" id="signup-username" name="signup-username" placeholder="username" /><br>
-    <label for="signup-email">Email: <span id="signup-email-error" class="error-text"></span></label><br>
-    <input type="text" id="signup-email" name="signup-email" placeholder="email" /><br>
-    <label for="signup-password">Password: <span id="signup-password-error" class="error-text"></span></label><br>
-    <input type="password" id="signup-password" name="signup-password" placeholder="password" /><br>
+    <h1>User Info</h1>
+    <table id="signup-user-info-table" class="signup-table">
+        <tr>
+            <td>
+                <label for="signup-username">Username: <span id="signup-username-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="signup-username" name="signup-username" placeholder="Username" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="signup-email">Email: <span id="signup-email-error" class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="signup-email" name="signup-email" placeholder="Email" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="signup-password">Password: <span id="signup-password-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="password" id="signup-password" name="signup-password" placeholder="Password" />
+            </td>
+        </tr>
+    </table>
+    <h1>Cat Info</h1>
+    <table id="signup-cat-info-table">
+        <tr>
+            <td>
+                <label for="signup-cat-name">Cat Name:<span id="signup-cat-name-error"
+                        class="error-text"></span></label>
+            </td>
+            <td>
+                <label for="signup-cat-gender">Cat Gender:<span id="signup-cat-gender-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="signup-cat-name" id="signup-cat-name" placeholder="Name" />
+            </td>
+            <td>
+                <select name="signup-cat-gender" id="signup-cat-gender">
+                    <option>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="signup-cat-age">Cat Age:<span id="signup-cat-age-error" class="error-text"></span></label>
+            </td>
+            <td>
+                <label for="signup-cat-breed">Cat Breed:<span id="signup-cat-breed-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input style="width: 45%" min="0" max="30" type="number" name="signup-cat-age-years"
+                    id="signup-cat-age-years" placeholder="Years" />
+                <input style="width: 45%" min="0" max="12" type="number" name="signup-cat-age-months"
+                    id="signup-cat-age-months" placeholder="Months" />
+            </td>
+            <td>
+                <input name="signup-cat-breed" id="signup-cat-breed" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="signup-cat-altered">Neutered or Spayed?:<span id="signup-cat-altered-error"
+                        class="error-text"></span></label>
+            </td>
+            <td>
+                <label for="signup-cat-image">Cat Image(URL):<span id="signup-cat-image-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select name="signup-cat-altered" id="signup-cat-altered">
+                    <option>Select Altered Status</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" name="signup-cat-image" id="signup-cat-image" placeholder="URL to Cat Image" />
+            </td>
+        </tr>
+    </table>
+    <h1>Profile Info</h1>
+    <table>
+        <tr>
+            <td>
+                <label for="signup-profile-bio">Profile Bio:<span id="signup-profile-bio-error"
+                        class="error-text"></span></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="signup-profile-bio">
+                </textarea>
+            </td>
+        </tr>
+    </table>
     <input type="submit" value="Submit" />
     <input id="load-signin-button" type="button" value="Load Signin" />
 </form>

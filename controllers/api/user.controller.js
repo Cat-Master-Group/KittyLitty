@@ -1,26 +1,31 @@
 const xss = require("xss");
 
 const { checkId } = require("../../validations");
-const {
-  createUser,
-  authUser,
-  changeUser,
-  removeUser,
-  getSelectedUsers,
-  canSwipe,
-  swipe,
-  getUser,
-} = require("../../data/user.data");
+const userdb = require("../../data/user.data");
+
 
 const signUp = async (req, res, next) => {
   try {
-    const userName = xss(req.body.userName);
-    const email = xss(req.body.email);
-    const password = xss(req.body.password);
+    const payload = {};
+    payload.userName = xss(req.body.userName);
+    payload.email = xss(req.body.email);
+    payload.password = xss(req.body.password);
+    payload.userCat = {};
+    payload.userCat.catName = xss(req.body.userCat.catName);
+    payload.userCat.catGender = xss(req.body.userCat.catGender);
+    payload.userCat.catAge = xss(req.body.userCat.catAge);
+    payload.userCat.catBreed = xss(req.body.userCat.catBreed);
+    payload.userCat.catIsAltered = xss(req.body.userCat.catIsAltered);
+    payload.userCat.catGallery = [];
+    req.body.userCat.catGallery.forEach(element => {
+      payload.userCat.catGallery.push(xss(element));
+    });
+    payload.userBio = xss(req.body.userBio);
 
-    const oneUser = await createUser(userName, email, password);
+    const oneUser = await userdb.createUser(payload);
     console.log(oneUser);
-    res.json({ ...oneUser });
+    req.session.user = oneUser;
+    res.json({ login: "success" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -29,9 +34,12 @@ const signUp = async (req, res, next) => {
 
 const signIn = async (req, res, next) => {
   try {
+    console.log(req.body);
     const email = xss(req.body.email);
     const password = xss(req.body.password);
-    const user = await authUser(email, password);
+    console.log("email: " + email);
+    console.log("password: " + password);
+    const user = await userdb.authUser(email, password);
     console.log(user);
     if (user) {
       req.session.user = user;
@@ -45,7 +53,10 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const signOut = async (req, res, next) => {};
+const signOut = async (req, res, next) => {
+  req.session.destroy();
+  res.json({ logout: "success" });
+};
 
 const sendLoginStatus = async (req, res, next) => {
   if (req.session.user) {
@@ -66,7 +77,7 @@ const getUserInfo = async (req, res, next) => {
   }
 
   try {
-    const userInfo = await getUser(id);
+    const userInfo = await userdb.getUser(id);
     console.log(userInfo);
     return res.json(userInfo);
   } catch (error) {
@@ -82,7 +93,7 @@ const adjustUser = async (req, res, next) => {
       changeObj[key] = xss(changeObj[key]);
     }
     console.log(req.body);
-    const updatedUser = await changeUser(req.session.user, xss(req.body));
+    const updatedUser = await userdb.changeUser(req.session.user, xss(req.body));
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
@@ -99,7 +110,7 @@ const deleteUser = async (req, res, next) => {
   }
 
   try {
-    await getUser(req.session.user._id);
+    await userdb.getUser(req.session.user._id);
   } catch (error) {
     return res.status(404).json({ error: "User not found" });
   }
@@ -120,7 +131,7 @@ const deleteUser = async (req, res, next) => {
 const availableUsers = async (req, res, next) => {
   try {
     const currentUser = req.session.user._id;
-    const list = await getSelectedUsers(currentUser);
+    const list = await userdb.getSelectedUsers(currentUser);
     res.json(list);
   } catch (error) {
     console.log(error);
@@ -130,7 +141,7 @@ const availableUsers = async (req, res, next) => {
 
 const swipeUser = async (req, res, next) => {
   try {
-    const canItSwipe = canSwipe(req.session.user._id, xss(req.body.matchId));
+    const canItSwipe = userdb.canSwipe(req.session.user._id, xss(req.body.matchId));
     if (!canItSwipe) {
       throw "Cannot Match";
     }
@@ -143,12 +154,16 @@ const swipeUser = async (req, res, next) => {
   try {
     const { _id } = req.session.user;
     const matchId = xss(req.body.matchId);
-    const result = swipe(_id, matchId);
+    const result = userdb.swipe(_id, matchId);
     return res.json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
   }
+};
+
+const getCurrentUserId = (req, res, next) => {
+  res.json(req.session.user._id);
 };
 
 //Add swipe function
@@ -163,4 +178,5 @@ module.exports = {
   availableUsers,
   swipeUser,
   getUserInfo,
+  getCurrentUserId,
 };
