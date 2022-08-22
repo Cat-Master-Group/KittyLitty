@@ -34,7 +34,6 @@ const conversationsList = async (req, res, next) => {
         }
       }
     }
-    console.log(peopleDir);
 
     return res.status(200).json({ conversations, peopleDir, id });
   } catch (error) {
