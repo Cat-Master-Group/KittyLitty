@@ -1,12 +1,10 @@
 const { ObjectId } = require("mongodb");
 const mongoCollections = require("../config/mongoCollections");
-const { getUser } = require("./user.data");
 const { conversations } = mongoCollections;
 
 const createConversation = async (arrUsers) => {
   const conversationCollection = await conversations();
   const participants = arrUsers.map((x) => ObjectId(x));
-  //validation arrary through all users?
   const messages = [];
   let newConversation = {
     participants,

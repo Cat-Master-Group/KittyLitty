@@ -60,13 +60,17 @@
 
   submitMessage.on("click", function (event) {
     event.preventDefault();
+    try {
+      checkString();
+    } catch (error) {
+      alert("ERROR 400: Bad message input");
+      throw error;
+    }
     if (!curConvo) {
       alert("SELECT CONVERSATION");
-    } else if (enterMessage.val().trim() === "") {
-      alert("MESSAGE CANNOT BE EMPTY");
     } else {
       patchRequestConfig.url = "/api/conversation/messages/" + curConvo;
-      patchRequestConfig.data = { messages: enterMessage.val() };
+      patchRequestConfig.data = { messages: filterXSS(enterMessage.val()) };
       try {
         $.ajax(patchRequestConfig).then(function (response) {
           currMessageList = response.messages;
@@ -107,6 +111,13 @@
         .addClass(`${currMessage.senderId === id ? "right" : "left"}`);
     }
   };
-})(window.jQuery);
 
-// Helper functions
+  const checkString = () => {
+    if (typeof enterMessage.val() !== "string") {
+      throw `MESSAGE NOT STRING ERROR: message must be a string`;
+    }
+    if (enterMessage.val().trim().length === 0) {
+      throw "MESSAGE CANNOT BE EMPTY";
+    }
+  };
+})(window.jQuery);
