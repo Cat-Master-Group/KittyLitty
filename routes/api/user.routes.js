@@ -9,6 +9,7 @@ const {
   deleteUser,
   swipeUser,
   getUserInfo,
+  getUserSettingInfo,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -17,6 +18,10 @@ router.post("/signup", function (req, res, next) {
 
 router.post("/signin", function (req, res, next) {
   signIn(req, res, next);
+});
+
+router.get("/setting", function (req, res, next) {
+  getUserSettingInfo(req, res, next);
 });
 
 router.patch("/adjust", function (req, res, next) {
@@ -41,6 +46,10 @@ router.get("/available", function (req, res, next) {
 
 router.patch("/swipe", function (req, res, next) {
   swipeUser(req, res, next);
+});
+
+router.patch("/addcomment", function (req, res, next) {
+  addComment(req, res, next);
 });
 
 module.exports = router;

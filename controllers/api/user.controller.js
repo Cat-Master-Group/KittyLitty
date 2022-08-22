@@ -75,14 +75,30 @@ const getUserInfo = async (req, res, next) => {
   }
 };
 
+const getUserSettingInfo = async (req, res, next) => {
+  try {
+    const userInfo = await getUser(req.session.user._id);
+    delete userInfo.password;
+    delete userInfo.email;
+    res.json(userInfo);
+  } catch (error) {
+    res
+      .status(403)
+      .json({ error, message: "Not allowed to access the user info!" });
+  }
+};
+
 const adjustUser = async (req, res, next) => {
   try {
+    const { payLoad } = JSON.parse(req.body.json);
     const changeObj = {};
-    for (let key in req.body) {
-      changeObj[key] = xss(changeObj[key]);
+    for (let key in payLoad) {
+      changeObj[key] = xss(payLoad[key]);
     }
-    console.log(req.body);
-    const updatedUser = await changeUser(req.session.user, xss(req.body));
+    const updatedUser = await changeUser(req.session.user, changeObj);
+    delete updatedUser.email;
+    delete updatedUser.password;
+    console.log(updatedUser);
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
@@ -153,6 +169,10 @@ const swipeUser = async (req, res, next) => {
 
 //Add swipe function
 
+const addComment = async (req, res, next) => {
+  //TODO addComment method to go with user.routes.js
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -163,4 +183,6 @@ module.exports = {
   availableUsers,
   swipeUser,
   getUserInfo,
+  addComment,
+  getUserSettingInfo,
 };
