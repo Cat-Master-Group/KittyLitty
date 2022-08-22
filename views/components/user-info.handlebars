@@ -1,0 +1,37 @@
+{{#each userInfo.userCat.catGallery}}
+<img src="{{this}}" />
+{{/each}}
+
+<div>
+    <h3>Name</h3>
+    <h4>{{userInfo.userCat.catName}}</h4>
+    <h3>Gender</h3>
+    <h4>{{userInfo.userCat.catGender}}</h4>
+    <h3>Cat Age</h3>
+    <h4>{{userInfo.userCat.catAge}}</h4>
+    <h3>Cat Altered</h3>
+    <h4>{{userInfo.userCat.catIsAltered}}</h4>
+</div>
+<dt>Comments</dt>
+<dd>
+    <ol>
+        {{#each userInfo.userComments}}
+        <div>{{this.commenterId}}</div>
+<dd>
+    {{this.commentText}}
+</dd>
+<dd>
+    <button type="post">Like</button>
+    <button type="clear">Dislike</button>
+</dd>
+{{/each}}
+</ol>
+</dd>
+<form action="/catInfo/{{userInfo.userId}}" method="PATCH">
+    <label for="add-comment">
+        Comment
+        <input type="text" name="addcomment" placeholder="Write Comment" />
+    </label>
+    <button type="submit">Post Comment</button>
+    <button type="reset">Clear</button>
+</form>

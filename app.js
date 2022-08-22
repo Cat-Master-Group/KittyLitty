@@ -38,15 +38,17 @@ app.use(
 
 //Middleware
 app.use("*", async (req, res, next) => {
-  req.session.user = { _id: "63019a61252ad06186ae0138" };
+  if (DEV_ENV) {
+    //req.session.user = { _id: "63019a61252ad06186ae0138" };
+  }
 
   console.log(
-    `[${dateColor(`${new Date().toUTCString()}`)}]: ${methodColor(
-      req.method
-    )} ${urlColor(req.originalUrl)} (${
-      req.session.user
-        ? authColor(`Authenticated User`)
-        : nonAuthColor("Non-Authenticated User")
+    `[${dateColor(`${new Date().toUTCString()}`)}]: 
+    ${methodColor(req.method)} 
+    ${urlColor(req.originalUrl)} 
+    (${req.session.user
+      ? authColor(`Authenticated User`)
+      : nonAuthColor("Non-Authenticated User")
     })`
   );
   next();
@@ -62,7 +64,7 @@ app.use("/load", (req, res, next) => {
     next();
   } else {
     res.render("error", {
-      axios: req.query.axios,
+      ajax: req.query.ajax,
       layout: "component",
       componentname: "error",
       errorMessage: "401 Unauthorized: User is not logged in",

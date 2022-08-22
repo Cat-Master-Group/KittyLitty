@@ -9,89 +9,76 @@ async function main() {
 
   const userCollection = await users();
 
+  const userIds = [];
+
   const user1 = {
-    catName: "Pi",
-    catGender: "M",
-    catAge: 36,
-    catBreed: "Maine Coon",
-    catIsAltered: true,
-    catGallery: [
-      "https://cdn.catapp.com/9a499033-c49c-4673-b976-6941bfbe0fd7.jpg",
-      "https://cdn.catapp.com/91ee5335-1a2f-470e-ab51-1750730b5201.jpg",
-    ],
-    userBio: "We found Pi as a stray living in one of our lifeboats...",
-  };
-
-  const userOne = await userData.createUser(
-    "Richard Parker",
-    "rparker@gmail.com",
-    "meow"
-  );
-  await userData.changeUser(userOne, user1);
-
-  const userTwo = await userData.createUser(
-    "Richard Parker",
-    "rparker@gmail.com",
-    "meow"
-  );
-  const idTwo = userTwo._id.toString();
-  await userData.changeUser();
-
-  const user2 = {
-    userId: "8ad9b86e-bd89-4f1a-8455-728976bb14f6",
-    userName: "John Smith",
+    userName: "Richard Parker",
+    email: "rparker@yahoo.com",
+    //ilovecats
+    password: "$2a$16$y.n.Qd5NZ/x5Y3M52LhhVelcmH5Ptlf/etSZxbHLNH9WUlQLwH1te",
     userCat: {
-      catName: "Oscar",
+      catName: "Pi",
       catGender: "M",
-      catAge: 15,
-      catBreed: "Scottish Fur",
+      catAge: 36,
+      catBreed: "Maine Coon",
       catIsAltered: true,
       catGallery: [
-        "https://cdn.catapp.com/9a499033-c49c-4673-b976-6941bfbe0fd7.jpg",
-        "https://cdn.catapp.com/91ee5335-1a2f-470e-ab51-1750730b5201.jpg",
+        "https://www.boredpanda.com/blog/wp-content/uploads/2015/11/maine-coon-cats-24__605.jpg"
       ],
     },
-    userBio: "We found Oscar as a stray living in one of our lifeboats...",
-    userLocation: {
-      country: "USA",
-      address1: "1234 ABC Drive",
-      address2: "Sunset Drive, MA",
+    userBio: "We found Pi as a stray living in one of our lifeboats...",
+    followedUsers: [],
+    friendedUsers: [],
+    blockedUsers: [],
+    userInbox: [],
+    userReports: [],
+    userComments: [],
+    filterMiles: 1000,
+  };
+
+  const user1Response = await userCollection.insertOne(user1);
+  userIds.push(user1Response.insertedId.toString());
+
+  const user2 = {
+    userName: "Peet McGill",
+    email: "leetpeet@seekpeet.com",
+    //hideandseekpeet
+    password: "$2a$16$p1M5VSSEYN2pnLc1w8r0qehda3G2ge5sic3QNO3jfH.MmNO1xkzXa",
+    userCat: {
+      catName: "Chuckie",
+      catGender: "M",
+      catAge: 75,
+      catBreed: "American Short-Hair",
+      catIsAltered: true,
+      catGallery: [
+        "https://cdn.mos.cms.futurecdn.net/tQWiu3vhqvetSzxvZHhTNQ-1920-80.jpg"
+      ],
     },
-    followedUsers: [
-      "8ad9b86d-ad89-4f1a-8455-628926bb14f6",
-      "f1b5e3c6-9c52-46fe-a09e-e60f511eca45",
-    ],
-    friendedUsers: ["8ad9b86d-ad89-4f1a-8455-628926bb14f6"],
-    blockedUsers: ["76506898-eac7-4125-bce1-87ad234d069e"],
-    userInbox: ["8ad9b86d-ad89-4f1a-8455-628926bb14f6"],
-    friendRequests: ["b3792a7f-0617-4f8d-bfc8-2bbe20f44ad5"],
-    userReports: [
-      {
-        reporterId: "3b127986-a10c-400a-8ac4-1d5980a74ec7",
-        reason: "Fake Account",
-        details: "User had pictures of dogs not cats.",
-      },
-    ],
+    userBio: "Chuckie is tricky little fella who will do anything for a meal.",
+    followedUsers: [userIds[0]],
+    friendedUsers: [],
+    blockedUsers: [],
+    userInbox: [],
+    userReports: [],
     userComments: [
       {
-        commenterId: "f174e4d8-140e-4200-8fec-33174f3dbde1",
-        commentText: "That's one big cat...",
+        commenterId: userIds[0],
+        commentText: "He looks a little...",
         likes: [
           {
-            likerId: "f174e4d8-140e-4200-8fec-33174f3dbde1",
+            likerId: userIds[0],
             likeValue: 1,
           },
         ],
       },
     ],
+    filterMiles: 1000,
   };
 
-  const insertUser = await userCollection.insertOne(user1);
-  console.log(insertUser.insertedId);
-  const insertUser2 = await userCollection.insertOne(user2);
-  console.log(insertUser2.insertedId);
-  await userCollection.find().toArray();
-  dbConnection.closeConnection();
+  user2Response = await userCollection.insertOne(user2);
+  userIds.push(user2Response.insertedId.toString());
+
+  await dbConnection.closeConnection();
 }
 
 main().catch((error) => {

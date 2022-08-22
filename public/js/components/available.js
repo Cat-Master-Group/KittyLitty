@@ -29,15 +29,15 @@
   }
 
   const getCurrentPerson = (obj) => {
+    console.log(obj);
     try {
       const id = obj._id;
       const requestConfig = {
         method: "GET",
-        url: "/api/user/info/" + id,
+        url: "/load/user-info/" + id,
       };
       $.ajax(requestConfig).then(function (responseMessage) {
-        // console.log(responseMessage);
-        name.text(responseMessage.userName + currentIndex);
+        setInnerHTML(document.getElementById("name"), responseMessage);
       });
     } catch (error) {
       console.log(error);
@@ -90,6 +90,7 @@
   const noMoreMatches = () => {
     accept.hide();
     decline.hide();
+    name.hide();
     alert("No more matches are available!");
   };
 })(window.jQuery);

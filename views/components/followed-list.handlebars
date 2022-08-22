@@ -1,0 +1,10 @@
+<h1>Followed List</h1>
+<ul id="followed-list">
+    {{#each followedUsers}}
+    <li>
+        <div class="followed-list-entry" id="user-{{this._id}}">
+            <span>{{this.userName}}</span>
+        </div>
+    </li>
+    {{/each}}
+</ul>
