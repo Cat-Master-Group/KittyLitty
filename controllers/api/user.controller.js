@@ -184,20 +184,23 @@ const reportUser = async (req, res, next) => {
   const details = xss(req.body.details);
   const offendedId = xss(req.body.offendedId);
   const reason = xss(req.body.reason);
-  const id = req.session.user._id;
+  const id = xss(req.session.user._id);
   try {
     if (offendedId === id) {
       throw "cannot report yourself";
     }
-    checkString(details);
-    checkString(reason);
-    checkId(offendedId);
+    checkId(id, "id");
+    checkId(offendedId, "offendedId");
+    checkString(reason, "reason");
+    checkString(details, "details");
+    await userdb.getUser(id);
+    await userdb.getUser(offendedId);
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error, message: "Invalid input" });
   }
   try {
-    await userdb.reportOneUser();
+    await userdb.reportOneUser(id, offendedId, reason, details);
     return res.json({ message: "success" });
   } catch (error) {
     console.log(error);

@@ -8,7 +8,7 @@ async function main() {
   await db.dropDatabase();
 
   const userCollection = await users();
-
+  userCollection.createIndex({ userLocation: "2dsphere" });
   const userIds = [];
 
   const user1 = {
@@ -23,7 +23,7 @@ async function main() {
       catBreed: "Maine Coon",
       catIsAltered: true,
       catGallery: [
-        "https://www.boredpanda.com/blog/wp-content/uploads/2015/11/maine-coon-cats-24__605.jpg"
+        "https://www.boredpanda.com/blog/wp-content/uploads/2015/11/maine-coon-cats-24__605.jpg",
       ],
     },
     userBio: "We found Pi as a stray living in one of our lifeboats...",
@@ -33,7 +33,8 @@ async function main() {
     userInbox: [],
     userReports: [],
     userComments: [],
-    filterMiles: 1000,
+    filterMiles: 100000,
+    userLocation: { type: "Point", coordinates: [0, 0] },
   };
 
   const user1Response = await userCollection.insertOne(user1);
@@ -51,7 +52,7 @@ async function main() {
       catBreed: "American Short-Hair",
       catIsAltered: true,
       catGallery: [
-        "https://cdn.mos.cms.futurecdn.net/tQWiu3vhqvetSzxvZHhTNQ-1920-80.jpg"
+        "https://cdn.mos.cms.futurecdn.net/tQWiu3vhqvetSzxvZHhTNQ-1920-80.jpg",
       ],
     },
     userBio: "Chuckie is tricky little fella who will do anything for a meal.",
@@ -72,7 +73,8 @@ async function main() {
         ],
       },
     ],
-    filterMiles: 1000,
+    filterMiles: 100000,
+    userLocation: { type: "Point", coordinates: [0, 0] },
   };
 
   user2Response = await userCollection.insertOne(user2);
