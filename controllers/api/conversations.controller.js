@@ -6,6 +6,7 @@ const {
 const { getUser } = require("../../data/user.data");
 const { checkId } = require("../../validations");
 const { checkString } = require("../../validations/checkString");
+const xss = require("xss");
 
 const conversationsList = async (req, res, next) => {
   const peopleDir = {};
@@ -20,7 +21,6 @@ const conversationsList = async (req, res, next) => {
           if (onePerson || onePerson.trim() !== "undefined") {
             if (!peopleDir[onePerson]) {
               try {
-                console.log(onePerson);
                 if (typeof onePerson === "object") {
                 }
                 const userInfo = await getUser(onePerson);
@@ -45,7 +45,7 @@ const conversationsList = async (req, res, next) => {
 };
 
 const getSingleConversation = async (req, res, next) => {
-  const id = req.params.id;
+  const id = xss(req.params.id);
 
   try {
     checkId(id);
@@ -67,9 +67,8 @@ const getSingleConversation = async (req, res, next) => {
 
 const sendMessage = async (req, res, next) => {
   const id = req.session.user._id;
-  /* XSS for messages and conversationId*/
-  const message = req.body.messages;
-  const conversationId = req.params.id;
+  const message = xss(req.body.messages);
+  const conversationId = xss(req.params.id);
 
   try {
     checkId(id);

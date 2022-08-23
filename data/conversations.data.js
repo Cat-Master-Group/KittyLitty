@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const mongoCollections = require("../config/mongoCollections");
+const { checkId } = require("../validations");
 const { conversations } = mongoCollections;
 
 const createConversation = async (arrUsers) => {
@@ -23,6 +24,11 @@ const createConversation = async (arrUsers) => {
 };
 
 const getConversation = async (id) => {
+  try {
+    checkId(id);
+  } catch (error) {
+    throw error;
+  }
   if (!id) throw "INVALID CONVERSATION ID";
   const conversationCollection = await conversations();
 
@@ -34,6 +40,11 @@ const getConversation = async (id) => {
 };
 
 const getParticipantId = async (participantId) => {
+  try {
+    checkId(participantId);
+  } catch (error) {
+    throw error;
+  }
   const conversationCollection = await conversations();
   const singularParticipant = await conversationCollection.findOne({
     partcipants: {
@@ -49,6 +60,11 @@ const getParticipantId = async (participantId) => {
 };
 
 const getAllUserConversations = async (id) => {
+  try {
+    checkId(id);
+  } catch (error) {
+    throw error;
+  }
   const conversationCollection = await conversations();
   const allConversations = await conversationCollection
     .find({
