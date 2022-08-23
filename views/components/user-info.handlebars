@@ -49,12 +49,7 @@
         <option value="harass">Harassment</option>
       </select>
       <textarea type="text" name="details" id="details"></textarea>
-      <input
-        type="hidden"
-        name="get-id"
-        value={{`${userInfo.userId}`}}
-        id="get-id"
-      />
+      <input name="get-id" value={{userInfo._id}} id="get-id" />
       <input type="submit" id="submitButton" />
 
     </form>
