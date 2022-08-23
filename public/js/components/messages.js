@@ -10,7 +10,6 @@
   let curConvo;
   let currMessageList;
 
-  const syncInterval = 1000 * 1;
   let grabFail = false;
 
   const requestConfig = {
@@ -51,7 +50,6 @@
   };
 
   loadConvo();
-  setInterval(loadConvo, syncInterval);
 
   const patchRequestConfig = {
     method: "PATCH",
@@ -94,6 +92,8 @@
     };
     let index = convoList.findIndex(findConvo);
     currMessageList = convoList[index].messages;
+    enterMessage.show();
+    submitMessage.show();
 
     populateMessages();
   });
