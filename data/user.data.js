@@ -65,7 +65,7 @@ const getUserArray = async (userArray, projection) => {
 
 const getAllUser = async () => {
   const userCollection = await users();
-  const allUsers = await userCollection.findAll();
+  const allUsers = await userCollection.find({}).toArray();
   return allUsers;
 };
 
@@ -124,6 +124,11 @@ const changeUser = async (user, changeObj) => {
   if (changeObj.userBio) {
     updateChanges.userBio = changeObj.userBio;
   }
+  if (changeObj.commets) {
+    updateChanges.comments.push(changeObj.commets);
+  } else {
+    updateChanges.commets = [changeObj.commets];
+  }
   if (
     changeObj.userLocation &&
     changeObj.userLocation.length === 2 &&
@@ -156,15 +161,14 @@ const getSelectedUsers = async (id) => {
   const userCollection = await users();
   userCollection.createIndex({ userLocation: "2dsphere" });
   const curUser = await getUser(id);
-  // let filterMiles = 100000;
-  /*
+  let filterMiles = 100000;
+
   if (curUser.filterMiles) {
     filterMiles = curUser.filterMiles;
   }
   if (curUser.userLocation) {
     coord = curUser.userLocation.coordinates;
   }
-  */
 
   let blackList = [ObjectId(id)];
   if (curUser.followedUsers) {
@@ -191,7 +195,7 @@ const getSelectedUsers = async (id) => {
         blockedUsers: {
           $nin: [ObjectId(id)],
         },
-        /*
+
         userLocation: {
           $near: {
             $geometry: { type: "Point", coordinates: coord },
@@ -199,7 +203,6 @@ const getSelectedUsers = async (id) => {
             $maxDistance: filterMiles,
           },
         },
-        */
       },
       {
         projection: {
@@ -315,13 +318,10 @@ const swipe = async (id, matchId) => {
 };
 
 const reportOneUser = async (id, offendedId, reason, details) => {
-  checkId(id);
-  checkId(offendedId);
-  checkString(reason);
-  checkString(details);
   const userCollection = await users();
   const curUser = await getUser(id);
   const offUser = await getUser(offendedId);
+  console.log(offUser);
 
   const reportObj = {
     reporterId: ObjectId(id),
@@ -347,8 +347,8 @@ const reportOneUser = async (id, offendedId, reason, details) => {
   );
 
   const updateOffended = await userCollection.updateOne(
-    { _id: ObjectId(id) },
-    { $set: { userReports: curUser.userReports } }
+    { _id: ObjectId(offendedId) },
+    { $set: { userReports: offUser.userReports } }
   );
   if (!updateCur.matchedCount && !updateCur.modifiedCount) {
     throw "Update failed";
@@ -381,4 +381,5 @@ module.exports = {
   swipe,
   removeUser,
   reportOneUser,
+  getAllUser,
 };

@@ -21,7 +21,6 @@
   });
 
   reportForm.on("submit", function (event) {
-    console.log(reason.val());
     event.preventDefault(reason.val());
     if (
       !details.val() ||
@@ -43,18 +42,22 @@
       alert("Please one of the selected reasons!");
       return;
     }
-    const requestConfig = {
-      method: "PATCH",
-      url: "/api/user/report",
-      data: {
-        details: filterXSS(details.val()),
-        offendedId: filterXSS(id.val()),
-        reason: filterXSS(reason.val()),
-      },
-    };
+
     try {
+      const requestConfig = {
+        method: "PATCH",
+        url: "/api/user/report",
+        data: {
+          details: filterXSS(details.val()),
+          offendedId: filterXSS(id.val()),
+          reason: filterXSS(reason.val()),
+        },
+        error: (req, status, error) => {
+          alert(`Error occured when submitting report!`);
+        },
+      };
       $.ajax(requestConfig).then((response) => {
-        alert("Report successful!");
+        alert("Report successful!"); // this code won't happen
       });
     } catch (error) {
       console.log(error);
