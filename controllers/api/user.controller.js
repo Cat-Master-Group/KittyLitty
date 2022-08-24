@@ -20,6 +20,7 @@ const signUp = async (req, res, next) => {
       payload.userCat.catGallery.push(xss(element));
     });
     payload.userBio = xss(req.body.userBio);
+    payload.userLocation = [Number(req.body.userLocation[0]), Number(req.body.userLocation[1])]
 
     const oneUser = await userdb.createUser(payload);
 
@@ -36,7 +37,9 @@ const signIn = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = xss(req.body.email);
-    if (email.length == 0 || email === "") {
+    try {
+      checkString(email);
+    } catch (e) {
       res.status(400).json({ email: "No email provided" });
       return;
     }
@@ -53,7 +56,9 @@ const signIn = async (req, res, next) => {
       return;
     }
     const password = xss(req.body.password);
-    if (checkString(password) === "") {
+    try {
+      checkString(password)
+    } catch (e) {
       res.status(400).json({ errorMessage: "No password provided" });
       return;
     }
@@ -206,7 +211,8 @@ const swipeUser = async (req, res, next) => {
   try {
     const { _id } = req.session.user;
     const matchId = xss(req.body.matchId);
-    const result = userdb.swipe(_id, matchId);
+    const result = await userdb.swipe(_id, matchId);
+    req.session.user = await userdb.getUser(_id);
     return res.json(result);
   } catch (error) {
     console.log(error);
@@ -254,8 +260,62 @@ const getCurrentUserId = (req, res, next) => {
 //Add swipe function
 
 const addComment = async (req, res, next) => {
-  //TODO addComment method to go with user.routes.js
+  const apiSession = {};
+
+  try {
+    const commentTargetId = xss(req.body.commentTargetId.trim());
+    const commentObj = {
+      commenterId: req.session.user._id,
+      commentText: xss(req.body.commentText.trim()),
+      likes: [{
+        likerId: req.session.user._id,
+        likeValue: 1
+      }],
+    };
+    apiSession.commentTargetId = commentTargetId;
+    apiSession.commentObj = commentObj;
+  } catch (e) {
+    res.status(400).json({ e, message: "Invalid input" });
+    return;
+  }
+
+  try {
+    await userdb.addComment(apiSession.commentTargetId, apiSession.commentObj);
+    return res.json({ message: "success" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ e, message: "fail" });
+    return;
+  }
 };
+
+const likeComment = async (req, res, next) => {
+  const apiSession = {};
+  try {
+    const commentTargetId = xss(req.body.commentTargetId.trim());
+    const commentIndex = xss(req.body.commentIndex);
+    const likeObj = {
+      likerId: req.session.user._id,
+      likeValue: xss(req.body.likeValue),
+    };
+    apiSession.commentTargetId = commentTargetId;
+    apiSession.commentIndex = commentIndex;
+    apiSession.likeObj = likeObj;
+  } catch (e) {
+    res.status(400).json({ e, message: "Invalid input" });
+    return;
+  }
+
+  try {
+    await userdb.likeComment(apiSession.commentTargetId, apiSession.commentIndex, apiSession.likeObj);
+    res.json({ message: "success" });
+    return;
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ e, message: "fail" });
+    return;
+  }
+}
 
 module.exports = {
   signUp,
@@ -271,4 +331,5 @@ module.exports = {
   addComment,
   getUserSettingInfo,
   reportUser,
+  likeComment,
 };

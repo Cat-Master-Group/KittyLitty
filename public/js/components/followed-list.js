@@ -3,6 +3,6 @@ Array.from(document.getElementsByClassName("followed-list-entry")).forEach(eleme
     element.addEventListener("click", (event) => {
         event.preventDefault();
         console.log(element.id.split("-")[1]);
-        loadCatInfo(element.id.split("-")[1]);
+        loadUserInfo(element.id.split("-")[1]);
     })
 });

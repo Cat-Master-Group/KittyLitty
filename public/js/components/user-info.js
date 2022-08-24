@@ -1,4 +1,128 @@
 {
+  //Edit Button
+  if (document.getElementById("user-info-settings-button")) {
+    document.getElementById("user-info-settings-button").addEventListener("click", (event) => {
+      loadSettings();
+    });
+  }
+  //Comments Section
+  document.getElementById("comment-new-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const newCommentTargetId = document.getElementById("comment-new-target-id").value;
+    const newCommentText = document.getElementById("comment-new-text").value;
+
+    if (appComponents.Validate.isEmptyString(newCommentTargetId)) {
+      alert('Something went wrong, try refreshing the page');
+    }
+
+    if (appComponents.Validate.isEmptyString(newCommentText)) {
+      alert('Must provide comment text to post a comment!');
+    }
+
+    const requestConfig = {
+      method: "PATCH",
+      url: "/api/user/addcomment",
+      data: {
+        commentTargetId: newCommentTargetId.trim(),
+        commentText: newCommentText.trim(),
+      },
+      error: (req, status, error) => {
+        console.log(req); // the w
+        console.log(status); // IDK
+        console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+        console.log(req.responseJSON); // this is the data from our res.json(data)
+      },
+    }
+
+    $.ajax(requestConfig).then((responseMessage) => {
+      if (!responseMessage.message || responseMessage.message !== "success") {
+        alert("Server error. Try refreshing and trying again.");
+      } else {
+        reloadUserInfo()
+      }
+    });
+  });
+
+  Array.from(document.getElementsByClassName("user-info-like-button")).forEach((element) => {
+    element.addEventListener("click", (event) => {
+      const clickedButton = event.target;
+      const data = {};
+      data.commentTargetId = document.getElementById("comment-new-target-id").value.trim();
+      data.commentIndex = clickedButton.id.split("-")[2].trim();
+      console.log(clickedButton.className);
+      if (clickedButton.className.includes("active")) {
+        data.likeValue = 0;
+      } else {
+        data.likeValue = 1;
+      }
+
+      const requestConfig = {
+        method: "PATCH",
+        url: "/api/user/likecomment",
+        data: data,
+        error: (req, status, error) => {
+          console.log(req); // the w
+          console.log(status); // IDK
+          console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+          console.log(req.responseJSON); // this is the data from our res.json(data)
+        },
+      }
+
+      $.ajax(requestConfig).then((responseMessage) => {
+        if (!responseMessage.message || responseMessage.message !== "success") {
+          alert("Server error. Try refreshing and trying again.");
+        } else {
+          reloadUserInfo()
+        }
+      });
+    });
+  });
+
+  Array.from(document.getElementsByClassName("user-info-dislike-button")).forEach((element) => {
+    element.addEventListener("click", (event) => {
+      const clickedButton = event.target;
+      const data = {};
+      data.commentTargetId = document.getElementById("comment-new-target-id").value;
+      data.commentIndex = clickedButton.id.split("-")[2];
+      if (clickedButton.className.includes("active")) {
+        data.likeValue = 0;
+      } else {
+        data.likeValue = -1;
+      }
+      const requestConfig = {
+        method: "PATCH",
+        url: "/api/user/likecomment",
+        data: data,
+        error: (req, status, error) => {
+          console.log(req); // the w
+          console.log(status); // IDK
+          console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+          console.log(req.responseJSON); // this is the data from our res.json(data)
+        },
+      }
+
+      $.ajax(requestConfig).then((responseMessage) => {
+        if (!responseMessage.message || responseMessage.message !== "success") {
+          alert("Server error. Try refreshing and trying again.");
+        } else {
+          reloadUserInfo()
+        }
+      });
+    });
+  });
+
+  function reloadUserInfo() {
+    requestConfig = {
+      method: "GET",
+      url: "/load/user-info/" + document.getElementById("comment-new-target-id").value,
+    };
+
+    $.ajax(requestConfig).then((responseMessage) => {
+      setInnerHTML(document.getElementById("user-info-container").parentNode, responseMessage);
+    });
+  }
+
+  //Reports Section
   const reportForm = $("#reportForm");
   const reason = $("#reason");
   const id = $("#get-id");
@@ -7,7 +131,6 @@
   const reportField = $("#report");
 
   let isHidden = true;
-  // 630321b13c4bdf2f0d203760
 
   reportToggle.on("click", function (event) {
     event.preventDefault();
