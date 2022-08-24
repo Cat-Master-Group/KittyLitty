@@ -273,15 +273,28 @@ const swipe = async (id, matchId) => {
     if (matchUser.friendedUsers) {
       matchFriendList = [...matchUser.friendedUsers];
     }
+    let userFollowedList = [];
+    if (curUser.followedUsers) {
+      userFollowedUsers = [...curUser.followedUsers];
+    }
     userFriendList.push(ObjectId(matchId));
+    userFollowedList.push(ObjectId(matchId));
     matchFriendList.push(ObjectId(id));
 
+    /*
     const matchFollowListIndex = matchUser.followedUsers.indexOf(ObjectId(id));
     matchUser.followedUsers.splice(matchFollowListIndex);
+    */
+
 
     const updateCurUser = await userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $set: { friendedUsers: userFriendList } }
+      {
+        $set: {
+          friendedUsers: userFriendList,
+          followedUsers: userFollowedList
+        }
+      }
     );
 
     const updateMatchUser = await userCollection.findOneAndUpdate(
@@ -359,6 +372,87 @@ const reportOneUser = async (id, offendedId, reason, details) => {
   return true;
 };
 
+const addComment = async (commentTargetId, commentObj) => {
+  const userCollection = await users();
+  const curUser = await getUser(commentObj.commenterId);
+  const targetUser = await getUser(commentTargetId);
+  if (!curUser) {
+    throw 'Commenter ID invalid.';
+  }
+
+  if (!targetUser) {
+    throw 'Comment target ID invalid';
+  }
+
+  if (targetUser.blockedUsers && targetUser.blockedUsers.includes(curUser._id)) {
+    throw 'Comment target is blocking commenter';
+  }
+
+  if (!targetUser.userComments) {
+    targetUser.userComments = [];
+  }
+  targetUser.userComments.push(commentObj);
+
+  const updateTarget = await userCollection.updateOne(
+    { _id: ObjectId(commentTargetId) },
+    {
+      $set: { userComments: targetUser.userComments },
+    }
+  );
+
+  if (!updateTarget.matchedCount && !updateTarget.modifiedCount) {
+    throw "Update failed";
+  }
+
+  return updateTarget;
+}
+
+const likeComment = async (id, index, likeObj) => {
+  const userCollection = await users();
+  const curUser = await getUser(likeObj.likerId);
+  const targetUser = await getUser(id);
+
+  if (!curUser) {
+    throw 'Liker ID invalid.';
+  }
+
+  if (!targetUser) {
+    throw 'Comment owner ID invalid';
+  }
+
+  if (!targetUser.userComments || !targetUser.userComments[index]) {
+    throw 'Comment not found';
+  }
+
+  if (!targetUser.userComments[index].likes) {
+    targetUser.userComments[index].likes = [];
+  }
+
+  const likeIndex = targetUser.userComments[index].likes.findIndex((element) => {
+    return element.likerId === likeObj.likerId;
+  });
+
+  if (likeIndex === -1) {
+    targetUser.userComments[index].likes.push(likeObj);
+  } else {
+    targetUser.userComments[index].likes[likeIndex] = likeObj;
+  }
+
+
+  const updateTarget = await userCollection.updateOne(
+    { _id: ObjectId(id) },
+    {
+      $set: { userComments: targetUser.userComments },
+    }
+  );
+
+  if (!updateTarget.matchedCount && !updateTarget.modifiedCount) {
+    throw "Update failed";
+  }
+
+  return updateTarget;
+}
+
 const removeUser = async (id) => {
   const userCollection = await users();
   const deletedUser = userCollection.deleteOne({
@@ -382,4 +476,6 @@ module.exports = {
   removeUser,
   reportOneUser,
   getAllUser,
+  addComment,
+  likeComment,
 };

@@ -13,6 +13,8 @@ const {
   signOut,
   getUserSettingInfo,
   reportUser,
+  addComment,
+  likeComment,
 } = require("../../controllers/api/user.controller");
 
 router.post("/signup", function (req, res, next) {
@@ -60,6 +62,10 @@ router.patch("/swipe", function (req, res, next) {
 
 router.patch("/addcomment", function (req, res, next) {
   addComment(req, res, next);
+});
+
+router.patch("/likecomment", function (req, res, next) {
+  likeComment(req, res, next);
 });
 
 router.patch("/report", function (req, res, next) {
