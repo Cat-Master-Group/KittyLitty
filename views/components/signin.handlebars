@@ -1,13 +1,56 @@
 <style>
-    #signin-container .error-text {
-        color: red;
-    }
+  #signin-container .error-text { color: rgb(31, 22, 205); }
 </style>
-<form id="signin-form">
-    <label for="signin-email">Email: <span id="signin-email-error" class="error-text"></span></label><br>
-    <input type="text" id="signin-email" name="signin-email" placeholder="Email" /><br>
-    <label for="signin-password">Password: <span id="signin-password-error" class="error-text"></span></label><br>
-    <input type="password" id="signin-password" placeholder="Password" /><br>
-    <button type="submit" class="btn btn-outline-primary">Submit</button>
-    <button type="button" class="btn btn-outline-primary" id="load-signup-button">Load Signup</button>
-</form>
+<section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <div class="mb-md-5 mt-md-4 pb-5">
+              <h2>Kitty Litty!</h2>
+              <div class="form-outline mb-4">
+              <form id="signin-form">
+                <label for="signin-email">Email:
+                  <span
+                    id="signin-email-error"
+                    class="error-text"
+                  ></span></label><br />
+                <input
+                  type="text"
+                  id="signin-email"
+                  name="signin-email"
+                  placeholder="Email"
+                /><br />
+                </div>
+                <div class="form-outline mb-4">
+                <label for="signin-password">Password:
+                  <span
+                    id="signin-password-error"
+                    class="error-text"
+                  ></span></label><br />
+                <input
+                  type="password"
+                  id="signin-password"
+                  placeholder="Password"
+                /><br />
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-outline-primary btn-md px-5"
+                >Submit</button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-md px-5"
+                  id="load-signup-button"
+                >Load Signup</button>
+                <img src="https://media.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif" alt="" srcset="" class="center">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

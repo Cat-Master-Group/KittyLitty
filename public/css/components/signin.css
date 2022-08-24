@@ -1,0 +1,21 @@
+#signin-container {
+    color: rgb(255, 8, 0);
+
+    background: #02a2f8;
+
+    background: -webkit-linear-gradient(to right, rgb(13, 189, 208), rgb(7, 63, 159));
+
+/* For IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, rgb(13, 189, 208), rgb(7, 63, 159))
+
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    /* width: 50%; */
+    width: 200px; 
+    height: 200px
+  }
