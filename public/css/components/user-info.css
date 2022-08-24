@@ -5,5 +5,16 @@
 
 #user-info-container img {
     width: auto;
-    max-height: 60vh;
+    max-height: 70vh;
+}
+
+#user-info-settings-container {
+    float: right;
+}
+
+#user-info-container .img-container {
+    overflow: hidden;
+    width: 100%;
+    background-color: #b2b2b2;
+    text-align: center;
 }
