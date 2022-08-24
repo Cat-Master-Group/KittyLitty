@@ -22,6 +22,7 @@ const signUp = async (req, res, next) => {
     payload.userBio = xss(req.body.userBio);
 
     const oneUser = await userdb.createUser(payload);
+
     console.log(oneUser);
     req.session.user = oneUser;
     res.json({ login: "success" });
@@ -32,10 +33,18 @@ const signUp = async (req, res, next) => {
 };
 
 const signIn = async (req, res, next) => {
+  const email = xss(req.body.email);
+  const password = xss(req.body.password);
+
+  try {
+    checkString(email);
+    checkString(password);
+  } catch (error) {
+    throw error;
+  }
+
   try {
     console.log(req.body);
-    const email = xss(req.body.email);
-    const password = xss(req.body.password);
     console.log("email: " + email);
     console.log("password: " + password);
     const user = await userdb.authUser(email, password);
