@@ -27,6 +27,7 @@ const createUser = async (payload) => {
   const userCollection = await users();
 
   payload.password = await bcrypt.hash(payload.password, saltRounds);
+  console.log(payload.password);
 
   const oneUser = await userCollection.insertOne(payload);
   if (oneUser.insertedCount === 0) {
