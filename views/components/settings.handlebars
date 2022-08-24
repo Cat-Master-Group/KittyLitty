@@ -1,23 +1,23 @@
 <form id="adjustCat">
-
+  {{#with userInfo.userCat}}
   <label for="catName">Cat Name:</label>
   <br />
-  <input type="text" id="catName" name="catName" value="" />
+  <input type="text" id="catName" name="catName" value="{{catName}}" />
   <br />
 
   <label for="catGender">Cat Gender:</label>
   <br />
-  <input type="text" id="catGender" name="catGender" value="" />
+  <input type="text" id="catGender" name="catGender" value="{{catGender}}" />
   <br />
 
   <label for="catAge">Cat Age:</label>
   <br />
-  <input type="number" id="catAge" name="catAge" value="" />
+  <input type="number" id="catAge" name="catAge" value="{{catAge}}" />
   <br />
 
   <label for="catBreed">Cat Breed:</label>
   <br />
-  <input type="text" id="catBreed" name="catBreed" value="" />
+  <input type="text" id="catBreed" name="catBreed" value="{{catBreed}}" />
   <br />
 
   <label for="catIsAltered">Is Cat Neutered?:</label>
@@ -25,8 +25,13 @@
   <select id="catIsAltered">
     {{!-- {{#select catIsAltered}} --}}
     <option value=""></option>
-    <option value="yes">Yes</option>
+    {{#if catIsAltered}}
+    <option value="yes" selected>Yes</option>
     <option value="no">No</option>
+    {{else}}
+    <option value="yes">Yes</option>
+    <option value="no" selected>No</option>
+    {{/if}}
     {{!-- {{/select}} --}}
   </select>
   <br />
@@ -45,6 +50,8 @@
   <br />
   <input type="text" id="catGallery3" name="catGallery" value="" />
   <br />
+  {{/with}}
+
 
   <label for="userBio">User Bio:</label>
   <br />

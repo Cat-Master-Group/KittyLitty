@@ -173,6 +173,12 @@
       $.ajax(requestConfig).then(function (responseMessage) {
         console.log(responseMessage);
         alert("Update settings complete!");
+        $.ajax({
+          method: "GET",
+          url: "/api/user/current-user-id",
+        }).then((currentUserId) => {
+          loadUserInfo(currentUserId);
+        });
       });
     } catch (error) {
       alert("Updating settings failed!");
