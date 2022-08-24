@@ -1,4 +1,5 @@
 const userdb = require("../data/user.data");
+const conversationdb = require("../data/conversations.data");
 const { ObjectId } = require("mongodb");
 
 module.exports = {
@@ -28,7 +29,6 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "header-menu";
     renderData.script = true;
-    renderData.css = true;
     res.render("components/header-menu", renderData);
   },
 
@@ -168,11 +168,22 @@ module.exports = {
     res.render("components/available", renderData);
   },
 
+  /*
   loadMessages(req, res, next) {
     const renderData = {};
     renderData.layout = "component";
     renderData.componentname = "messages";
     renderData.script = true;
+    renderData.css = true;
     res.render("components/messages", renderData);
   },
+  */
+  async loadMessages(req, res, next) {
+    const renderData = {};
+    renderData.layout = "component";
+    renderData.componentname = "messages";
+    renderData.script = true;
+    renderData.css = true;
+    res.render("components/messages", renderData);
+  }
 };
