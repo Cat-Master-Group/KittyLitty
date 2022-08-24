@@ -21,6 +21,12 @@ const signUp = async (req, res, next) => {
     req.body.userCat.catGallery.forEach((element) => {
       payload.userCat.catGallery.push(xss(element));
     });
+
+    payload.userLocation = [];
+    req.body.userLocation.forEach((element) => {
+      payload.userLocation.push(Number(xss(element)));
+    })
+
     payload.userBio = req.body.userBio;
     checkString(payload.userName);
     checkString(payload.email);
