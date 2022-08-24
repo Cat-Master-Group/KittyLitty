@@ -288,6 +288,9 @@ const addComment = async (req, res, next) => {
   const apiSession = {};
 
   try {
+    if (xss(req.body.commentText.trim() === "")) {
+      throw "no comment text";
+    }
     const commentTargetId = xss(req.body.commentTargetId.trim());
     const commentObj = {
       commenterId: req.session.user._id,
