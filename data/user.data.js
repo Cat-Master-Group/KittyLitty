@@ -300,14 +300,13 @@ const swipe = async (id, matchId) => {
     matchUser.followedUsers.splice(matchFollowListIndex);
     */
 
-
     const updateCurUser = await userCollection.findOneAndUpdate(
       { _id: ObjectId(id) },
       {
         $set: {
           friendedUsers: userFriendList,
-          followedUsers: userFollowedList
-        }
+          followedUsers: userFollowedList,
+        },
       }
     );
 
@@ -391,15 +390,18 @@ const addComment = async (commentTargetId, commentObj) => {
   const curUser = await getUser(commentObj.commenterId);
   const targetUser = await getUser(commentTargetId);
   if (!curUser) {
-    throw 'Commenter ID invalid.';
+    throw "Commenter ID invalid.";
   }
 
   if (!targetUser) {
-    throw 'Comment target ID invalid';
+    throw "Comment target ID invalid";
   }
 
-  if (targetUser.blockedUsers && targetUser.blockedUsers.includes(curUser._id)) {
-    throw 'Comment target is blocking commenter';
+  if (
+    targetUser.blockedUsers &&
+    targetUser.blockedUsers.includes(curUser._id)
+  ) {
+    throw "Comment target is blocking commenter";
   }
 
   if (!targetUser.userComments) {
@@ -419,7 +421,7 @@ const addComment = async (commentTargetId, commentObj) => {
   }
 
   return updateTarget;
-}
+};
 
 const likeComment = async (id, index, likeObj) => {
   const userCollection = await users();
@@ -427,31 +429,32 @@ const likeComment = async (id, index, likeObj) => {
   const targetUser = await getUser(id);
 
   if (!curUser) {
-    throw 'Liker ID invalid.';
+    throw "Liker ID invalid.";
   }
 
   if (!targetUser) {
-    throw 'Comment owner ID invalid';
+    throw "Comment owner ID invalid";
   }
 
   if (!targetUser.userComments || !targetUser.userComments[index]) {
-    throw 'Comment not found';
+    throw "Comment not found";
   }
 
   if (!targetUser.userComments[index].likes) {
     targetUser.userComments[index].likes = [];
   }
 
-  const likeIndex = targetUser.userComments[index].likes.findIndex((element) => {
-    return element.likerId === likeObj.likerId;
-  });
+  const likeIndex = targetUser.userComments[index].likes.findIndex(
+    (element) => {
+      return element.likerId === likeObj.likerId;
+    }
+  );
 
   if (likeIndex === -1) {
     targetUser.userComments[index].likes.push(likeObj);
   } else {
     targetUser.userComments[index].likes[likeIndex] = likeObj;
   }
-
 
   const updateTarget = await userCollection.updateOne(
     { _id: ObjectId(id) },
@@ -465,7 +468,7 @@ const likeComment = async (id, index, likeObj) => {
   }
 
   return updateTarget;
-}
+};
 
 const removeUser = async (id) => {
   const userCollection = await users();
