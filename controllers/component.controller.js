@@ -124,7 +124,7 @@ module.exports = {
               return like.likerId === req.session.user._id.toString();
             });
             const commentObj = {
-              commenterName: commenterNameMap.get(element.commenterId),
+              commenterName: commenterNameMap.get(element.commenterId.toString()),
               commenterId: element.commenterId,
               commentText: element.commentText,
               commentLikeSum: likeSum,
@@ -132,6 +132,7 @@ module.exports = {
               isLikeActive: userLikeValue && userLikeValue.likeValue == Number(1) ? true : false,
               isDislikeActive: userLikeValue && userLikeValue.likeValue == Number(-1) ? true : false,
             }
+            console.log(commentObj);
             comments.push(commentObj);
           });
         } catch (e) {

@@ -3,6 +3,7 @@ const xss = require("xss");
 const { checkId, checkString } = require("../../validations");
 const userdb = require("../../data/user.data");
 const e = require("express");
+const { ObjectId } = require("mongodb");
 
 const signUp = async (req, res, next) => {
   const payload = {};
@@ -291,7 +292,8 @@ const addComment = async (req, res, next) => {
     if (xss(req.body.commentText.trim() === "")) {
       throw "no comment text";
     }
-    const commentTargetId = xss(req.body.commentTargetId.trim());
+    checkId(xss(req.body.commentTargetId.trim()), "commentTargetId");
+    const commentTargetId = ObjectId(xss(req.body.commentTargetId.trim()));
     const commentObj = {
       commenterId: req.session.user._id,
       commentText: xss(req.body.commentText.trim()),
@@ -303,6 +305,7 @@ const addComment = async (req, res, next) => {
     apiSession.commentTargetId = commentTargetId;
     apiSession.commentObj = commentObj;
   } catch (e) {
+    console.log(e);
     res.status(400).json({ e, message: "Invalid input" });
     return;
   }
