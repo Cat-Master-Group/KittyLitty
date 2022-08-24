@@ -6,7 +6,19 @@ const { createConversation } = require("./conversations.data");
 const { users } = mongoCollections;
 const saltRounds = 16;
 
+const findDuplicateEmail = async (dupEmail) => {
+  const userCollection = await users();
+
+  const sameEmail = await userCollection.findOne({
+    email: dupEmail,
+  });
+  if (sameEmail) {
+    throw `SHOULD NOT WORK`;
+  }
+};
+
 const createUser = async (payload) => {
+  console.log(payload);
   if (
     !payload ||
     !payload.userName ||
@@ -495,4 +507,5 @@ module.exports = {
   getAllUser,
   addComment,
   likeComment,
+  findDuplicateEmail,
 };
