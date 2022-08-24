@@ -53,8 +53,6 @@ module.exports = {
               userName: element.userName,
             });
           });
-          console.log(followedUserList);
-          console.log(renderData.followedUsers);
         }
         res.render("components/followed-list", renderData);
       });
