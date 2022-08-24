@@ -1,5 +1,15 @@
+footer {
+  background-color: #F9FEFF;
+  height: 10vh;
+}
+
+.footer-item {
+  text-align: center;
+
+}
+
 .component {
-  width: 100vw;
+  width: 100%;
 }
 
 .right {
