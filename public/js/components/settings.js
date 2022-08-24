@@ -111,16 +111,26 @@
       method: "DELETE",
       url: "/api/user/delete",
     };
-    checkString;
     try {
       $.ajax(requestConfig).then(function (responseMessage) {
         console.log(responseMessage);
+        emptyHeader();
+        loadSignin();
       });
     } catch (error) {
       console.log(error);
       alert("Account couldn't be deleted right now!");
     }
   });
+
+  $("#back").on("click", function (event) {
+    $.ajax({
+      method: "GET",
+      url: "/api/user/current-user-id",
+    }).then((currentUserId) => {
+      loadUserInfo(currentUserId);
+    });
+  })
 
   adjustForm.submit(function (event) {
     event.preventDefault();
