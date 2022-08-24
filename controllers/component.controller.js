@@ -68,6 +68,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "settings";
     renderData.script = true;
+    renderData.css = true;
 
     renderData.userInfo = req.session.user;
     res.render("components/settings", renderData);
