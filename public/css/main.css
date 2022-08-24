@@ -1,3 +1,7 @@
+.component {
+  width: 100vw;
+}
+
 .right {
   /* color: #6c5ce7; */
   background-color: #6c5ce7;
@@ -5,6 +9,7 @@
   align-items: flex-start;
   margin-left: 25%;
 }
+
 .left {
   color: #fd79a8;
   text-align: left;

@@ -18,7 +18,7 @@ async function main() {
     password: "$2a$16$y.n.Qd5NZ/x5Y3M52LhhVelcmH5Ptlf/etSZxbHLNH9WUlQLwH1te",
     userCat: {
       catName: "Pi",
-      catGender: "M",
+      catGender: "Male",
       catAge: 36,
       catBreed: "Maine Coon",
       catIsAltered: true,
@@ -47,7 +47,7 @@ async function main() {
     password: "$2a$16$p1M5VSSEYN2pnLc1w8r0qehda3G2ge5sic3QNO3jfH.MmNO1xkzXa",
     userCat: {
       catName: "Chuckie",
-      catGender: "M",
+      catGender: "Male",
       catAge: 75,
       catBreed: "American Short-Hair",
       catIsAltered: true,
