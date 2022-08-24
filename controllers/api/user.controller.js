@@ -193,12 +193,21 @@ const reportUser = async (req, res, next) => {
     checkId(offendedId, "offendedId");
     checkString(reason, "reason");
     checkString(details, "details");
-    await userdb.getUser(id);
-    await userdb.getUser(offendedId);
+    if (reason !== "fake" && reason !== "spam" && reason !== "harrass") {
+      throw "Please choose a selected reason";
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error, message: "Invalid input" });
   }
+  try {
+    await userdb.getUser(id);
+    await userdb.getUser(offendedId);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error, message: "Could not find user" });
+  }
+
   try {
     await userdb.reportOneUser(id, offendedId, reason, details);
     return res.json({ message: "success" });
