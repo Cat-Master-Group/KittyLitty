@@ -1,4 +1,10 @@
 {
+  //Edit Button
+  if (document.getElementById("user-info-settings-button")) {
+    document.getElementById("user-info-settings-button").addEventListener("click", (event) => {
+      loadSettings();
+    });
+  }
   //Comments Section
   document.getElementById("comment-new-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -19,6 +25,12 @@
       data: {
         commentTargetId: newCommentTargetId.trim(),
         commentText: newCommentText.trim(),
+      },
+      error: (req, status, error) => {
+        console.log(req); // the w
+        console.log(status); // IDK
+        console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+        console.log(req.responseJSON); // this is the data from our res.json(data)
       },
     }
 
@@ -48,6 +60,12 @@
         method: "PATCH",
         url: "/api/user/likecomment",
         data: data,
+        error: (req, status, error) => {
+          console.log(req); // the w
+          console.log(status); // IDK
+          console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+          console.log(req.responseJSON); // this is the data from our res.json(data)
+        },
       }
 
       $.ajax(requestConfig).then((responseMessage) => {
@@ -75,6 +93,12 @@
         method: "PATCH",
         url: "/api/user/likecomment",
         data: data,
+        error: (req, status, error) => {
+          console.log(req); // the w
+          console.log(status); // IDK
+          console.log(error); // Provide the status info (like "NOT FOUND" if its a 404)
+          console.log(req.responseJSON); // this is the data from our res.json(data)
+        },
       }
 
       $.ajax(requestConfig).then((responseMessage) => {
@@ -107,7 +131,6 @@
   const reportField = $("#report");
 
   let isHidden = true;
-  // 630321b13c4bdf2f0d203760
 
   reportToggle.on("click", function (event) {
     event.preventDefault();
