@@ -34,7 +34,7 @@ async function main() {
     userReports: [],
     userComments: [],
     filterMiles: 100000,
-    userLocation: { type: "Point", coordinates: [0, 0] },
+    userLocation: { type: "Point", coordinates: [41, -72] },
   };
 
   const user1Response = await userCollection.insertOne(user1);
@@ -116,7 +116,7 @@ async function main() {
       },
       {
         commenterId: userIds[0],
-        commentText: "Woah! I never thought I'd see a real unicorn",
+        commentText: "This isn't a cat!!!!!!!!",
         likes: [
           {
             likerId: userIds[0],
@@ -133,22 +133,20 @@ async function main() {
   userIds.push(user3Response.insertedId);
 
   const user4 = {
-    userName: "Walt the D",
-    email: "walt@sueus.com",
-    //fancyUnicorn
-    password: "$2a$16$xXvhEZYNAm8FVf.q567Md.l8lP0AFDfpRoesxNgfSa6EHLAAnDzB.",
+    userName: "Angelica",
+    email: "youknowthe@bestnickshow.com",
+    //cynthiabeautiful
+    password: "$2a$16$2Ef68x/0IOxVcCFDXb7CkO/CI2pugtTCDEGXC6g//nDV2p1s2GPS6",
     userCat: {
-      catName: "Unicorn",
-      catGender: "Male",
-      catAge: 25,
+      catName: "Fluffy",
+      catGender: "Female",
+      catAge: 15,
       catBreed: "Chantilly-Tiffany",
       catIsAltered: true,
-      catGallery: [
-        "https://cdn.mos.cms.futurecdn.net/tQWiu3vhqvetSzxvZHhTNQ-1920-80.jpg",
-      ],
+      catGallery: ["https://i.ytimg.com/vi/-RCq6zQVfGA/mqdefault.jpg"],
     },
     userBio:
-      "Unicorn is secretly a unicorn that is pretending to be a cat. She loves to mess with my brother and is huge fan of monkeys!",
+      "Fluffy is amazing and way better than my bratty couisn and her friends!",
     followedUsers: [userIds[1], userIds[0]],
     friendedUsers: [],
     blockedUsers: [],
@@ -188,7 +186,7 @@ async function main() {
     userReports: [],
     userComments: [],
     filterMiles: 100000,
-    userLocation: { type: "Point", coordinates: [10, -10] },
+    userLocation: { type: "Point", coordinates: [40, -74] },
   };
 
   user5Response = await userCollection.insertOne(user5);
