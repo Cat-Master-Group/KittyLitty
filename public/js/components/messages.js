@@ -94,18 +94,20 @@
 
   conversationList.on("click", "button", function (event) {
     event.preventDefault();
-
+    console.log(event.target);
+    console.log(convoList);
     curConvo = event.target.value;
-    const findConvo = (el) => {
-      return () => {
-        el._id === curConvo ? true : false;
-      };
-    };
-    let index = convoList.findIndex(findConvo);
+
+    let index = convoList.findIndex((element) => {
+      return element._id === curConvo;
+    });
+
+    console.log(index);
+
+    loadConvo();
     currMessageList = convoList[index].messages;
     enterMessage.show();
     submitMessage.show();
-
     populateMessages();
   });
 
