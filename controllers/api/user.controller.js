@@ -22,6 +22,7 @@ const signUp = async (req, res, next) => {
     payload.userBio = xss(req.body.userBio);
 
     const oneUser = await userdb.createUser(payload);
+
     console.log(oneUser);
     req.session.user = oneUser;
     res.json({ login: "success" });
@@ -32,35 +33,18 @@ const signUp = async (req, res, next) => {
 };
 
 const signIn = async (req, res, next) => {
+  const email = xss(req.body.email);
+  const password = xss(req.body.password);
+
+  try {
+    checkString(email);
+    checkString(password);
+  } catch (error) {
+    throw error;
+  }
+
   try {
     console.log(req.body);
-    const email = xss(req.body.email);
-    if (emailInput.length == 0 || emailInput === "") {
-      res.status(400).json({ email: "No email provided" });
-      return;
-    }
-    if (emailInput.length < 3 || emailInput.length > 255) {
-      res.status(400).json({ email: "Invalid email length" });
-      return;
-    }
-    if (
-      !emailInput.match(
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )
-    ) {
-      return { valid: false, errorMessage: "Invalid email format." };
-    }
-    const password = xss(req.body.password);
-    if (this.isEmptyString(passwordInput)) {
-      res.status(400).json({ errorMessage: "No password provided" });
-      return;
-    }
-    if (passwordInput.length < 8) {
-      res
-        .status(400)
-        .json({ errorMessage: "Password must be at least 8 characters long" });
-      return;
-    }
     console.log("email: " + email);
     console.log("password: " + password);
     const user = await userdb.authUser(email, password);

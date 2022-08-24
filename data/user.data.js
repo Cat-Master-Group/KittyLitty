@@ -32,17 +32,23 @@ const createUser = async (payload) => {
   if (oneUser.insertedCount === 0) {
     throw "Insert failed!";
   }
+
   return await getUser(oneUser.insertedId.toString());
 };
 
 const getUser = async (id) => {
+  try {
+    checkId(id);
+  } catch (error) {
+    throw error;
+  }
+
   const userCollection = await users();
   const oneUser = await userCollection.findOne({ _id: ObjectId(id) });
   if (!oneUser) {
     throw "User not found";
   }
 
-  // console.log("ALL USERS HERE", await userCollection.find({}).toArray());
   return oneUser;
 };
 
@@ -70,6 +76,13 @@ const getAllUser = async () => {
 };
 
 const authUser = async (email, password) => {
+  try {
+    checkString(email);
+    checkString(password);
+  } catch (error) {
+    throw error;
+  }
+
   if (!email || !password) {
     throw "incomplete login";
   }
@@ -226,8 +239,8 @@ const canSwipe = async (id, matchId) => {
   if (id === matchId) {
     throw "Cannot match with yourself!";
   }
-  checkId(id, "id");
-  checkId(matchId, "matchId");
+  checkId(id);
+  checkId(matchId);
   const curUser = await getUser(id);
   const matchUser = await getUser(matchId);
 
