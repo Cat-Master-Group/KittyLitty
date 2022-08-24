@@ -1,6 +1,7 @@
 {{#if isCurrentUser}}
 <div id="user-settings-container">
-  <button id="user-info-settings-button" type="button">Edit</button>
+  <button id="user-info-settings-button" class="btn btn-info" type="button"><i
+      class="fa-solid fa-user-gear"></i></button>
 </div>
 {{/if}}
 <div class="card" id="cat-info-container">
@@ -40,20 +41,23 @@
       <ul class="list-group list-group-flush">
         {{#each comments}}
         <li id="comment-{{@index}}" class="comment list-group-item">
-          <h5 class="card-title">{{this.commenterName}}</h5>
-          <span>{{this.commentLikeSum}}</span>
+          <h5 class="card-title">{{this.commenterName}}<span> Score: {{this.commentLikeSum}}</span></h5>
+
           <div class="card-text">{{this.commentText}}</div>
           <form id="comment-like-form-{{@index}}">
             {{#if isLikeActive}}
-            <button class="active user-info-like-button" id="comment-like-{{@index}}" type="button">Like</button>
+            <button class="active user-info-like-button btn btn-outline-primary btn-block btn-sm"
+              id="comment-like-{{@index}}" type="button"><i class="fa-solid fa-thumbs-up"></i></button>
             {{else}}
-            <button class="user-info-like-button" id="comment-like-{{@index}}" type="button">Like</button>
+            <button class="user-info-like-button btn btn-outline-primary btn-block btn-sm" id="comment-like-{{@index}}"
+              type="button"><i class="fa-regular fa-thumbs-up"></i></button>
             {{/if}}
             {{#if isDislikeActive}}
-            <button class="active user-info-dislike-button" id="comment-dislike-{{@index}}"
-              type="button">Dislike</button>
+            <button class="active user-info-dislike-button btn btn-outline-primary btn-block btn-sm"
+              id="comment-dislike-{{@index}}" type="button"><i class="fa-solid fa-thumbs-down"></i></button>
             {{else}}
-            <button class="user-info-dislike-button" id="comment-dislike-{{@index}}" type="button">Dislike</button>
+            <button class="user-info-dislike-button btn btn-outline-primary btn-block btn-sm"
+              id="comment-dislike-{{@index}}" type="button"><i class="fa-regular fa-thumbs-down"></i></button>
             {{/if}}
           </form>
         </li>
@@ -71,29 +75,38 @@
       </div>
       <div><textarea id="comment-new-text" name="comment-new-text" cols="50" rows="5"></textarea></div>
       <div>
-        <button id="comment-new-submit-button" type="submit">Post Comment</button>
-        <button id="comment-new-reset-button" type="reset">Clear</button>
+        <button id="comment-new-submit-button" class="btn btn-primary" type="submit">Post Comment</button>
+        <button id="comment-new-reset-button" class="btn btn-primary" type="reset">Clear</button>
       </div>
     </form>
   </div>
 </div>
 {{#unless isCurrentUser}}
 <div class="card" id="report-container">
-  <button id="reporting">Report</button>
+  <button id="reporting" class="btn btn-danger">Report</button>
   <div id="report" class="card" style="display: none;">
     <div class="card-header">
       <h5>Report User</h2>
     </div>
     <form id="reportForm">
-      <label for="detailInput">Pick violation:</label>
-      <select name="reason" id="reason">
-        <option value="fake">Fake Account</option>
-        <option value="spam">Spammer</option>
-        <option value="harass">Harassment</option>
-      </select>
-      <textarea type="text" name="details" id="details"></textarea>
-      <input type="hidden" name="get-id" value={{id}} id="get-id" />
-      <input type="submit" id="submitButton" />
+      <div class="card align-items-center justify-content-center">
+        <div>
+          <label for="detailInput">Pick violation:</label>
+        </div>
+        <div> <select name="reason" id="reason">
+            <option value="fake">Fake Account</option>
+            <option value="spam">Spammer</option>
+            <option value="harass">Harassment</option>
+          </select>
+        </div>
+        <div>
+          <textarea type="text" name="details" id="details" cols="50" rows="5"></textarea>
+        </div>
+        <input type="hidden" name="get-id" value={{id}} id="get-id" />
+        <div>
+          <button id="comment-new-submit-button" class="btn btn-danger" type="submit">Submit</button>
+        </div>
+      </div>
     </form>
   </div>
   <div id="submissionInfo"></div>

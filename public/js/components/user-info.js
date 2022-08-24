@@ -45,9 +45,11 @@
 
   Array.from(document.getElementsByClassName("user-info-like-button")).forEach((element) => {
     element.addEventListener("click", (event) => {
-      const clickedButton = event.target;
+      const clickedButton = event.currentTarget;
+      console.log(clickedButton);
       const data = {};
       data.commentTargetId = document.getElementById("comment-new-target-id").value.trim();
+      console.log(clickedButton.id.split("-"));
       data.commentIndex = clickedButton.id.split("-")[2].trim();
       console.log(clickedButton.className);
       if (clickedButton.className.includes("active")) {
@@ -80,7 +82,7 @@
 
   Array.from(document.getElementsByClassName("user-info-dislike-button")).forEach((element) => {
     element.addEventListener("click", (event) => {
-      const clickedButton = event.target;
+      const clickedButton = event.currentTarget;
       const data = {};
       data.commentTargetId = document.getElementById("comment-new-target-id").value;
       data.commentIndex = clickedButton.id.split("-")[2];
