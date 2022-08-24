@@ -280,10 +280,14 @@ document.getElementById("signup-form").addEventListener("submit", (event) => {
 });
 
 if (typeof loadSignin === "function") {
-    document.getElementById("load-signin-button").addEventListener("click", loadSignin);
+  document
+    .getElementById("load-signin-button")
+    .addEventListener("click", loadSignin);
 } else {
-    document.getElementById("load-signin-button").addEventListener("click", function () {
-        window.location.href = "/load/signin";
+  document
+    .getElementById("load-signin-button")
+    .addEventListener("click", function () {
+      window.location.href = "/load/signin";
     });
 }
 
