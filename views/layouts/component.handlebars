@@ -1,4 +1,7 @@
-<div class="component" id="{{componentname}}-container">
+{{#if css}}
+<link rel="stylesheet" href="/public/css/components/{{componentname}}.css" />
+{{/if}}
+<div class="component flex-column align-items-center" id="{{componentname}}-container">
   {{{body}}}
 </div>
 {{#unless ajax}}
