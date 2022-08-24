@@ -51,27 +51,32 @@ const signIn = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = xss(req.body.email);
-    if (emailInput.length == 0 || emailInput === "") {
+    try {
+      checkString(email);
+    } catch (e) {
       res.status(400).json({ email: "No email provided" });
       return;
     }
-    if (emailInput.length < 3 || emailInput.length > 255) {
+    if (email.length < 3 || email.length > 255) {
       res.status(400).json({ email: "Invalid email length" });
       return;
     }
     if (
-      !emailInput.match(
+      !email.match(
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       )
     ) {
-      return { valid: false, errorMessage: "Invalid email format." };
+      res.status(400).json({ email: "Invalid email format." });
+      return;
     }
     const password = xss(req.body.password);
-    if (this.isEmptyString(passwordInput)) {
+    try {
+      checkString(password)
+    } catch (e) {
       res.status(400).json({ errorMessage: "No password provided" });
       return;
     }
-    if (passwordInput.length < 8) {
+    if (password.length < 8) {
       res
         .status(400)
         .json({ errorMessage: "Password must be at least 8 characters long" });
@@ -173,7 +178,7 @@ const deleteUser = async (req, res, next) => {
   }
 
   try {
-    const oneUser = removeUser(req.session.user._id);
+    const oneUser = userdb.removeUser(req.session.user._id);
     if (oneUser) {
       req.session.destroy();
       return res.json({ deleted: true });
@@ -202,6 +207,12 @@ const swipeUser = async (req, res, next) => {
       req.session.user._id,
       xss(req.body.matchId)
     );
+    //check to see if it's a real ID
+    if (!matchId) {
+      throw "Not a real ID";
+    }
+    //check to see if the swipe user cannot swipe itself(not the same id)
+    //for example:
     if (!canItSwipe) {
       throw "Cannot Match";
     }
@@ -214,7 +225,8 @@ const swipeUser = async (req, res, next) => {
   try {
     const { _id } = req.session.user;
     const matchId = xss(req.body.matchId);
-    const result = userdb.swipe(_id, matchId);
+    const result = await userdb.swipe(_id, matchId);
+    req.session.user = await userdb.getUser(_id);
     return res.json(result);
   } catch (error) {
     console.log(error);
@@ -231,9 +243,13 @@ const reportUser = async (req, res, next) => {
     if (offendedId === id) {
       throw "cannot report yourself";
     }
-    checkString(details);
-    checkString(reason);
-    checkId(offendedId);
+    checkId(id, "id");
+    checkId(offendedId, "offendedId");
+    checkString(reason, "reason");
+    checkString(details, "details");
+    if (reason !== "fake" && reason !== "spam" && reason !== "harrass") {
+      throw "Please choose a selected reason";
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error, message: "Invalid input" });
@@ -262,8 +278,62 @@ const getCurrentUserId = (req, res, next) => {
 //Add swipe function
 
 const addComment = async (req, res, next) => {
-  //TODO addComment method to go with user.routes.js
+  const apiSession = {};
+
+  try {
+    const commentTargetId = xss(req.body.commentTargetId.trim());
+    const commentObj = {
+      commenterId: req.session.user._id,
+      commentText: xss(req.body.commentText.trim()),
+      likes: [{
+        likerId: req.session.user._id,
+        likeValue: 1
+      }],
+    };
+    apiSession.commentTargetId = commentTargetId;
+    apiSession.commentObj = commentObj;
+  } catch (e) {
+    res.status(400).json({ e, message: "Invalid input" });
+    return;
+  }
+
+  try {
+    await userdb.addComment(apiSession.commentTargetId, apiSession.commentObj);
+    return res.json({ message: "success" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ e, message: "fail" });
+    return;
+  }
 };
+
+const likeComment = async (req, res, next) => {
+  const apiSession = {};
+  try {
+    const commentTargetId = xss(req.body.commentTargetId.trim());
+    const commentIndex = xss(req.body.commentIndex);
+    const likeObj = {
+      likerId: req.session.user._id,
+      likeValue: xss(req.body.likeValue),
+    };
+    apiSession.commentTargetId = commentTargetId;
+    apiSession.commentIndex = commentIndex;
+    apiSession.likeObj = likeObj;
+  } catch (e) {
+    res.status(400).json({ e, message: "Invalid input" });
+    return;
+  }
+
+  try {
+    await userdb.likeComment(apiSession.commentTargetId, apiSession.commentIndex, apiSession.likeObj);
+    res.json({ message: "success" });
+    return;
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ e, message: "fail" });
+    return;
+  }
+}
 
 module.exports = {
   signUp,
@@ -279,4 +349,5 @@ module.exports = {
   addComment,
   getUserSettingInfo,
   reportUser,
+  likeComment,
 };

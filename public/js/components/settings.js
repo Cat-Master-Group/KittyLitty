@@ -114,12 +114,23 @@
     try {
       $.ajax(requestConfig).then(function (responseMessage) {
         console.log(responseMessage);
+        emptyHeader();
+        loadSignin();
       });
     } catch (error) {
       console.log(error);
       alert("Account couldn't be deleted right now!");
     }
   });
+
+  $("#back").on("click", function (event) {
+    $.ajax({
+      method: "GET",
+      url: "/api/user/current-user-id",
+    }).then((currentUserId) => {
+      loadUserInfo(currentUserId);
+    });
+  })
 
   adjustForm.submit(function (event) {
     event.preventDefault();
@@ -173,6 +184,12 @@
       $.ajax(requestConfig).then(function (responseMessage) {
         console.log(responseMessage);
         alert("Update settings complete!");
+        $.ajax({
+          method: "GET",
+          url: "/api/user/current-user-id",
+        }).then((currentUserId) => {
+          loadUserInfo(currentUserId);
+        });
       });
     } catch (error) {
       alert("Updating settings failed!");

@@ -1,47 +1,90 @@
-{{#each userInfo.userCat.catGallery}}
-  <img src="{{this}}" />
-{{/each}}
-
-<div>
-  <h3>Name</h3>
-  <h4>{{userInfo.userCat.catName}}</h4>
-  <h3>Gender</h3>
-  <h4>{{userInfo.userCat.catGender}}</h4>
-  <h3>Cat Age</h3>
-  <h4>{{userInfo.userCat.catAge}}</h4>
-  <h3>Cat Altered</h3>
-  <h4>{{userInfo.userCat.catIsAltered}}</h4>
+{{#if isCurrentUser}}
+<div id="user-settings-container">
+  <button id="user-info-settings-button" type="button">Edit</button>
 </div>
-<dt>Comments</dt>
-<dd>
-  <ol>
-    {{#each userInfo.userComments}}
-      <div>{{this.commenterId}}</div>
-      <dd>
-        {{this.commentText}}
-      </dd>
-      <dd>
-        <button type="post">Like</button>
-        <button type="clear">Dislike</button>
-      </dd>
-    {{/each}}
-  </ol>
-</dd>
-<form action="/catInfo/{{userInfo.userId}}" method="PATCH">
-  <label for="add-comment">
-    Comment
-    <input type="text" name="addcomment" placeholder="Write Comment" />
-  </label>
-  <button type="submit">Post Comment</button>
-  <button type="reset">Clear</button>
-</form>
-<div id="reportDiv">
+{{/if}}
+<div class="card" id="cat-info-container">
+  <div class="card-header">
+    <h4>{{catInfo.catName}}</h4>
+  </div>
+  {{#each catInfo.catGallery}}
+  <img class="card-img-top" src="{{this}}" title="{{../catInfo.catName}} Picture {{@index}}"
+    alt="{{../catInfo.catName}} Picture {{@index}}" />
+  {{/each}}
+  <div class="card-body">
+    <h4 class="card-subtitle">Gender:</h4>
+    <h5>{{catInfo.catGender}}</h5>
+    <h4 class="card-subtitle">Cat Age:</h4>
+    <h5>{{catInfo.catAgeYears}} Year(s) and {{catInfo.catAgeMonths}} Month(s)</h5>
+    <h4 class="card-subtitle">Cat Altered:</h4>
+    <h5>
+      {{#if catInfo.catIsAltered}}
+      Yes
+      {{else}}
+      No
+      {{/if}}
+    </h5>
+    <h4 class="card-subtitle">Bio:</h4>
+    <div>
+      <p class="card-text">{{userBio}}</p>
+    </div>
+  </div>
+</div>
+<div class="flex-column align-items-center" id="comment-container">
+  {{#if hasComments}}
+  <div class="card">
+    <div class="card-header">
+      <h4>Comment(s):</h4>
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        {{#each comments}}
+        <li id="comment-{{@index}}" class="comment list-group-item">
+          <h5 class="card-title">{{this.commenterName}}</h5>
+          <span>{{this.commentLikeSum}}</span>
+          <div class="card-text">{{this.commentText}}</div>
+          <form id="comment-like-form-{{@index}}">
+            {{#if isLikeActive}}
+            <button class="active user-info-like-button" id="comment-like-{{@index}}" type="button">Like</button>
+            {{else}}
+            <button class="user-info-like-button" id="comment-like-{{@index}}" type="button">Like</button>
+            {{/if}}
+            {{#if isDislikeActive}}
+            <button class="active user-info-dislike-button" id="comment-dislike-{{@index}}"
+              type="button">Dislike</button>
+            {{else}}
+            <button class="user-info-dislike-button" id="comment-dislike-{{@index}}" type="button">Dislike</button>
+            {{/if}}
+          </form>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+  {{/if}}
+  <div class="card flex-column align-items-center">
+    <form id="comment-new-form">
+      <input type="hidden" id="comment-new-target-id" name="comment-new-target-id" value="{{id}}" />
+      <div><label for="comment-new-text">
+          <h5 class="card-title"> New Comment</h5>
+        </label>
+      </div>
+      <div><textarea id="comment-new-text" name="comment-new-text" cols="50" rows="5"></textarea></div>
+      <div>
+        <button id="comment-new-submit-button" type="submit">Post Comment</button>
+        <button id="comment-new-reset-button" type="reset">Clear</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{#unless isCurrentUser}}
+<div class="card" id="report-container">
   <button id="reporting">Report</button>
-  <div id="report" hidden>
+  <div id="report" class="card" style="display: none;">
+    <div class="card-header">
+      <h5>Report User</h2>
+    </div>
     <form id="reportForm">
-
-      <h2>Report User</h2>
-
       <label for="detailInput">Pick violation:</label>
       <select name="reason" id="reason">
         <option value="fake">Fake Account</option>
@@ -49,10 +92,10 @@
         <option value="harass">Harassment</option>
       </select>
       <textarea type="text" name="details" id="details"></textarea>
-      <input name="get-id" value={{userInfo._id}} id="get-id" hidden />
+      <input type="hidden" name="get-id" value={{id}} id="get-id" />
       <input type="submit" id="submitButton" />
-
     </form>
   </div>
   <div id="submissionInfo"></div>
 </div>
+{{/unless}}
