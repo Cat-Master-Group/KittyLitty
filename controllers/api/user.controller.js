@@ -3,6 +3,7 @@ const xss = require("xss");
 const { checkId, checkString } = require("../../validations");
 const userdb = require("../../data/user.data");
 const e = require("express");
+const { ObjectId } = require("mongodb");
 
 const signUp = async (req, res, next) => {
   const payload = {};
@@ -21,6 +22,12 @@ const signUp = async (req, res, next) => {
     req.body.userCat.catGallery.forEach((element) => {
       payload.userCat.catGallery.push(xss(element));
     });
+
+    payload.userLocation = [];
+    req.body.userLocation.forEach((element) => {
+      payload.userLocation.push(Number(xss(element)));
+    })
+
     payload.userBio = req.body.userBio;
     checkString(payload.userName);
     checkString(payload.email);
@@ -282,7 +289,11 @@ const addComment = async (req, res, next) => {
   const apiSession = {};
 
   try {
-    const commentTargetId = xss(req.body.commentTargetId.trim());
+    if (xss(req.body.commentText.trim() === "")) {
+      throw "no comment text";
+    }
+    checkId(xss(req.body.commentTargetId.trim()), "commentTargetId");
+    const commentTargetId = ObjectId(xss(req.body.commentTargetId.trim()));
     const commentObj = {
       commenterId: req.session.user._id,
       commentText: xss(req.body.commentText.trim()),

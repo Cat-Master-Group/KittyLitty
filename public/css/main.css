@@ -52,3 +52,30 @@ body {
 #messageList {
   list-style-type: none;
 }
+
+.loading-overlay {
+  height: 100vh;
+  width: 100vw;
+  opacity: 0.5;
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 999;
+  text-align: center;
+}
+
+#loading-img {
+  animation: spin 2s infinite linear;
+  margin-top: 25vh;
+  height: 50px;
+  width: 50px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

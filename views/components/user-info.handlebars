@@ -1,16 +1,18 @@
-{{#if isCurrentUser}}
-<div id="user-settings-container">
-  <button id="user-info-settings-button" class="btn btn-info" type="button"><i
-      class="fa-solid fa-user-gear"></i></button>
-</div>
-{{/if}}
 <div class="card" id="cat-info-container">
   <div class="card-header">
-    <h4>{{catInfo.catName}}</h4>
+    <h4 id=" cat-info-cat-name" class="card-title">{{catInfo.catName}}</h4>
+    {{#if isCurrentUser}}
+    <div id="user-settings-container">
+      <button id="user-info-settings-button" class="btn btn-info btn-block btn-sm" type="button"><i
+          class="fa-solid fa-user-gear"></i></button>
+    </div>
+    {{/if}}
   </div>
   {{#each catInfo.catGallery}}
-  <img class="card-img-top" src="{{this}}" title="{{../catInfo.catName}} Picture {{@index}}"
-    alt="{{../catInfo.catName}} Picture {{@index}}" />
+  <div class="img-container">
+    <img class="card-img-top" src="{{this}}" title="{{../catInfo.catName}} Picture {{@index}}"
+      alt="{{../catInfo.catName}} Picture {{@index}}" />
+  </div>
   {{/each}}
   <div class="card-body">
     <h4 class="card-subtitle">Gender:</h4>

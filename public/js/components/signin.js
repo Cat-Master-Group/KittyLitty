@@ -76,10 +76,13 @@ document.getElementById("signin-form").addEventListener("submit", (event) => {
         password: filterXSS(document.getElementById("signin-password").value),
       },
       error: (req, status, error) => {
+        $(".loading-overlay").hide();
         alert("Error: Login was unsuccessful");
       },
     };
+    $(".loading-overlay").show();
     $.ajax(requestConfig).then((responseMessage) => {
+      $(".loading-overlay").hide();
       if (
         typeof assembleApp === "function" &&
         typeof loadSignin === "function"

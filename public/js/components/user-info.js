@@ -13,10 +13,12 @@
 
     if (appComponents.Validate.isEmptyString(newCommentTargetId)) {
       alert('Something went wrong, try refreshing the page');
+      return;
     }
 
     if (appComponents.Validate.isEmptyString(newCommentText)) {
       alert('Must provide comment text to post a comment!');
+      return;
     }
 
     const requestConfig = {

@@ -135,7 +135,7 @@
   adjustForm.submit(function (event) {
     event.preventDefault();
     const payLoad = {};
-    const catPic = Array(3);
+    const catPic = [];
     console.log(catPic);
     if (catName.val().trim()) {
       payLoad.catName = catName.val().trim();
@@ -153,16 +153,16 @@
     if (catIsAltered.val().trim()) {
       payLoad.catIsAltered = catIsAltered.val().trim();
     }
-    if (catGallery1.val().trim()) {
-      catPic[0] = catGallery1.val().trim();
+    if (catGallery1.val().trim() !== "") {
+      catPic[0].push(catGallery1.val().trim());
     }
-    if (catGallery2.val().trim()) {
-      catPic[1] = catGallery2.val().trim();
+    if (catGallery2.val().trim() !== "") {
+      catPic[1].push(catGallery2.val().trim());
     }
-    if (catGallery3.val().trim()) {
-      catPic[2] = catGallery3.val().trim();
+    if (catGallery3.val().trim() !== "") {
+      catPic[2].push(catGallery3.val().trim());
     }
-    if (userBio.val().trim()) {
+    if (userBio.val().trim() !== "") {
       payLoad.userBio = userBio.val().trim();
     }
 
@@ -172,7 +172,9 @@
     if (Number(filterMiles.val()) !== NaN && Number(filterMiles.val()) > 0) {
       payLoad.filterMiles = filterMiles.val();
     }
-    payLoad.catGallery = catPic;
+    if (catPic.length > 0) {
+      payLoad.catGallery = catPic;
+    }
 
     const requestConfig = {
       method: "PATCH",

@@ -38,7 +38,7 @@ async function main() {
   };
 
   const user1Response = await userCollection.insertOne(user1);
-  userIds.push(user1Response.insertedId.toString());
+  userIds.push(user1Response.insertedId);
 
   const user2 = {
     userName: "Peet McGill",
@@ -78,7 +78,7 @@ async function main() {
   };
 
   user2Response = await userCollection.insertOne(user2);
-  userIds.push(user2Response.insertedId.toString());
+  userIds.push(user2Response.insertedId);
 
   const user3 = {
     userName: "Deee Dee",
@@ -130,7 +130,7 @@ async function main() {
   };
 
   user3Response = await userCollection.insertOne(user3);
-  userIds.push(user3Response.insertedId.toString());
+  userIds.push(user3Response.insertedId);
 
   const user4 = {
     userName: "Walt the D",
@@ -160,7 +160,7 @@ async function main() {
   };
 
   user4Response = await userCollection.insertOne(user4);
-  userIds.push(user4Response.insertedId.toString());
+  userIds.push(user4Response.insertedId);
 
   const user5 = {
     userName: "Walt the D",
@@ -192,7 +192,7 @@ async function main() {
   };
 
   user5Response = await userCollection.insertOne(user5);
-  userIds.push(user5Response.insertedId.toString());
+  userIds.push(user5Response.insertedId);
 
   await dbConnection.closeConnection();
 }

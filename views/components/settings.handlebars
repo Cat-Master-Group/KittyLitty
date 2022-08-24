@@ -1,78 +1,85 @@
-<form id="adjustCat">
-  {{#with userInfo.userCat}}
-  <label for="catName">Cat Name:</label>
-  <br />
-  <input type="text" id="catName" name="catName" value="{{catName}}" />
-  <br />
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Profile Settings</h4>
+  </div>
+  <div class="card-body">
+    <form id="adjustCat">
+      {{#with userInfo.userCat}}
+      <label for="catName">Cat Name:</label>
+      <br />
+      <input type="text" id="catName" name="catName" value="{{catName}}" />
+      <br />
 
-  <label for="catGender">Cat Gender:</label>
-  <br />
-  <input type="text" id="catGender" name="catGender" value="{{catGender}}" />
-  <br />
+      <label for="catGender">Cat Gender:</label>
+      <br />
+      <input type="text" id="catGender" name="catGender" value="{{catGender}}" />
+      <br />
 
-  <label for="catAge">Cat Age:</label>
-  <br />
-  <input type="number" id="catAge" name="catAge" value="{{catAge}}" />
-  <br />
+      <label for="catAge">Cat Age:</label>
+      <br />
+      <input type="number" id="catAge" name="catAge" value="{{catAge}}" />
+      <br />
 
-  <label for="catBreed">Cat Breed:</label>
-  <br />
-  <input type="text" id="catBreed" name="catBreed" value="{{catBreed}}" />
-  <br />
+      <label for="catBreed">Cat Breed:</label>
+      <br />
+      <input type="text" id="catBreed" name="catBreed" value="{{catBreed}}" />
+      <br />
 
-  <label for="catIsAltered">Is Cat Neutered?:</label>
-  <br />
-  <select id="catIsAltered">
-    {{!-- {{#select catIsAltered}} --}}
-    <option value=""></option>
-    {{#if catIsAltered}}
-    <option value="yes" selected>Yes</option>
-    <option value="no">No</option>
-    {{else}}
-    <option value="yes">Yes</option>
-    <option value="no" selected>No</option>
-    {{/if}}
-    {{!-- {{/select}} --}}
-  </select>
-  <br />
+      <label for="catIsAltered">Is Cat Neutered?:</label>
+      <br />
+      <select id="catIsAltered">
+        {{!-- {{#select catIsAltered}} --}}
+        <option value=""></option>
+        {{#if catIsAltered}}
+        <option value="yes" selected>Yes</option>
+        <option value="no">No</option>
+        {{else}}
+        <option value="yes">Yes</option>
+        <option value="no" selected>No</option>
+        {{/if}}
+        {{!-- {{/select}} --}}
+      </select>
+      <br />
 
-  <label for="catGallery">Cat Image 1(url):</label>
-  <br />
-  <input type="text" id="catGallery1" name="catGallery" value="" />
-  <br />
+      <label for="catGallery">Cat Image 1(url):</label>
+      <br />
+      <input type="text" id="catGallery1" name="catGallery" value="" />
+      <br />
 
-  <label for="catGallery">Cat Image 2(url):</label>
-  <br />
-  <input type="text" id="catGallery2" name="catGallery" value="" />
-  <br />
+      <label for="catGallery">Cat Image 2(url):</label>
+      <br />
+      <input type="text" id="catGallery2" name="catGallery" value="" />
+      <br />
 
-  <label for="catGallery">Cat Image 3(url):</label>
-  <br />
-  <input type="text" id="catGallery3" name="catGallery" value="" />
-  <br />
-  {{/with}}
+      <label for="catGallery">Cat Image 3(url):</label>
+      <br />
+      <input type="text" id="catGallery3" name="catGallery" value="" />
+      <br />
+      {{/with}}
 
 
-  <label for="userBio">User Bio:</label>
-  <br />
-  <input type="text" id="userBio" name="userBio" value="" />
-  <br />
+      <label for="userBio">User Bio:</label>
+      <br />
+      <textarea class="h-20 w-40" id="userBio" name="userBio"></textarea>
+      <br />
 
-  <label for="locationBtn">Location:</label>
-  <br />
-  <button id="locationBtn" name="locationBtn">Update Location</button>
-  <p id="locationResult"></p>
-  <br />
+      <label for="locationBtn">Location:</label>
+      <br />
+      <button class="btn btn-success" id="locationBtn" name="locationBtn">Update Location</button>
+      <p id="locationResult"></p>
+      <br />
 
-  <label for="filterMiles">How many miles to filter by:</label>
-  <br />
-  <input type="number" id="filterMiles" name="filterMiles" value="100" />
-  <br />
+      <label for="filterMiles">How many miles to filter by:</label>
+      <br />
+      <input type="number" id="filterMiles" name="filterMiles" value="100" />
+      <br />
 
-  <button type="submit">Update Page</button>
-</form>
+      <button class="btn btn-primary" type="submit">Update Page</button>
+    </form>
 
-<br />
-<button id="back">Go Back</button>
-<br />
-<button id="delete">Delete Account</button>
+    <br />
+    <button class="btn btn-primary" id="back">Go Back</button>
+    <br />
+    <button class="btn btn-danger" id="delete">Delete Account</button>
+  </div>
+</div>
