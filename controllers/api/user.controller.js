@@ -37,7 +37,9 @@ const signIn = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = xss(req.body.email);
-    if (email.length == 0 || email === "") {
+    try {
+      checkString(email);
+    } catch (e) {
       res.status(400).json({ email: "No email provided" });
       return;
     }
@@ -54,7 +56,9 @@ const signIn = async (req, res, next) => {
       return;
     }
     const password = xss(req.body.password);
-    if (checkString(password) === "") {
+    try {
+      checkString(password)
+    } catch (e) {
       res.status(400).json({ errorMessage: "No password provided" });
       return;
     }
