@@ -22,7 +22,6 @@ const signUp = async (req, res, next) => {
     payload.userBio = xss(req.body.userBio);
 
     const oneUser = await userdb.createUser(payload);
-
     console.log(oneUser);
     req.session.user = oneUser;
     res.json({ login: "success" });
@@ -216,9 +215,13 @@ const reportUser = async (req, res, next) => {
     if (offendedId === id) {
       throw "cannot report yourself";
     }
-    checkString(details);
-    checkString(reason);
-    checkId(offendedId);
+    checkId(id, "id");
+    checkId(offendedId, "offendedId");
+    checkString(reason, "reason");
+    checkString(details, "details");
+    if (reason !== "fake" && reason !== "spam" && reason !== "harrass") {
+      throw "Please choose a selected reason";
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error, message: "Invalid input" });
