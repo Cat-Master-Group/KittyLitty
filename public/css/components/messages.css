@@ -4,6 +4,10 @@
 }
 
 #messages-flex-container {
+    height: 100%;
+}
+
+#messages-card-container {
     height: 90vh;
 }
 
