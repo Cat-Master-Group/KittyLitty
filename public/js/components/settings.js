@@ -111,6 +111,7 @@
       method: "DELETE",
       url: "/api/user/delete",
     };
+    checkString;
     try {
       $.ajax(requestConfig).then(function (responseMessage) {
         console.log(responseMessage);

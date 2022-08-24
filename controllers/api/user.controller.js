@@ -171,6 +171,12 @@ const swipeUser = async (req, res, next) => {
       req.session.user._id,
       xss(req.body.matchId)
     );
+    //check to see if it's a real ID
+    if (!matchId) {
+      throw "Not a real ID";
+    }
+    //check to see if the swipe user cannot swipe itself(not the same id)
+    //for example:
     if (!canItSwipe) {
       throw "Cannot Match";
     }
