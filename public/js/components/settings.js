@@ -123,6 +123,7 @@
   });
 
   adjustForm.submit(function (event) {
+    event.preventDefault();
     const payLoad = {};
     const catPic = Array(3);
     console.log(catPic);

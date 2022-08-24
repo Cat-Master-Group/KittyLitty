@@ -22,6 +22,7 @@ const signUp = async (req, res, next) => {
     payload.userBio = xss(req.body.userBio);
 
     const oneUser = await userdb.createUser(payload);
+
     console.log(oneUser);
     req.session.user = oneUser;
     res.json({ login: "success" });
