@@ -36,27 +36,28 @@ const signIn = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = xss(req.body.email);
-    if (emailInput.length == 0 || emailInput === "") {
+    if (email.length == 0 || email === "") {
       res.status(400).json({ email: "No email provided" });
       return;
     }
-    if (emailInput.length < 3 || emailInput.length > 255) {
+    if (email.length < 3 || email.length > 255) {
       res.status(400).json({ email: "Invalid email length" });
       return;
     }
     if (
-      !emailInput.match(
+      !email.match(
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       )
     ) {
-      return { valid: false, errorMessage: "Invalid email format." };
+      res.status(400).json({ email: "Invalid email format." });
+      return;
     }
     const password = xss(req.body.password);
-    if (this.isEmptyString(passwordInput)) {
+    if (checkString(password) === "") {
       res.status(400).json({ errorMessage: "No password provided" });
       return;
     }
-    if (passwordInput.length < 8) {
+    if (password.length < 8) {
       res
         .status(400)
         .json({ errorMessage: "Password must be at least 8 characters long" });
@@ -187,6 +188,12 @@ const swipeUser = async (req, res, next) => {
       req.session.user._id,
       xss(req.body.matchId)
     );
+    //check to see if it's a real ID
+    if (!matchId) {
+      throw "Not a real ID";
+    }
+    //check to see if the swipe user cannot swipe itself(not the same id)
+    //for example:
     if (!canItSwipe) {
       throw "Cannot Match";
     }
