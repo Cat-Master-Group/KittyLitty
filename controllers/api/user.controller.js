@@ -2,10 +2,12 @@ const xss = require("xss");
 
 const { checkId, checkString } = require("../../validations");
 const userdb = require("../../data/user.data");
+const e = require("express");
 
 const signUp = async (req, res, next) => {
+  const payload = {};
+
   try {
-    const payload = {};
     payload.userName = xss(req.body.userName);
     payload.email = xss(req.body.email);
     payload.password = xss(req.body.password);
@@ -19,16 +21,29 @@ const signUp = async (req, res, next) => {
     req.body.userCat.catGallery.forEach((element) => {
       payload.userCat.catGallery.push(xss(element));
     });
-    payload.userBio = xss(req.body.userBio);
-
-    const oneUser = await userdb.createUser(payload);
-
-    console.log(oneUser);
-    req.session.user = oneUser;
-    res.json({ login: "success" });
+    payload.userBio = req.body.userBio;
+    checkString(payload.userName);
+    checkString(payload.email);
+    checkString(payload.userCat.catName);
+    checkString(payload.userCat.catGender);
+    checkString(payload.userCat.catBreed);
+    checkString(payload.userCat.catIsAltered);
+    checkString(payload.userBio);
+    const checkDup = await userdb.findDuplicateEmail(payload.email);
+    console.log("AHH", checkDup);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error });
+    return res.status(400).json({ error, message: "Invalid input" });
+  }
+
+  try {
+    const oneUser = await userdb.createUser(payload);
+    console.log(oneUser);
+    req.session.user = oneUser;
+    return res.json({ login: "success" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
   }
 };
 

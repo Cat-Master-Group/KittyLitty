@@ -18,6 +18,10 @@
   const requestConfig = {
     method: "GET",
     url: allConversationsURL,
+
+    error: (req, status, error) => {
+      alert("Error: Sign Up was unsuccessful");
+    },
   };
 
   const loadConvo = () => {
@@ -57,6 +61,10 @@
   const patchRequestConfig = {
     method: "PATCH",
     url: sendMessageURL,
+
+    error: (req, status, error) => {
+      alert("Error: Sign Up was unsuccessful");
+    },
   };
 
   submitMessage.on("click", function (event) {
