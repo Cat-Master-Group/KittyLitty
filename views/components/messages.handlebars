@@ -1,15 +1,20 @@
-<div id="messages-flex-container" class="d-flex">
-  <div class="card col-4">
-    <ul class="list-group list-group-flush" id="conversationList">
-    </ul>
+<div id="messages-card-container" class="card">
+  <div class="card-header">
+    <h4 class="card-title">Messages</h4>
   </div>
-  <div class="card chat col-8">
-    <ul id="messageList"></ul>
-    <div class="card-body">
-      <textarea class="col-12" style="display:none;" id="enterMessage"
-        placeholder="Please enter your message here."></textarea>
-      <button style="display:none;" class="btn btn-primary" id="submitMessage">Send</button>
+  <div id="messages-flex-container" class="d-flex">
+    <div class="card col-4">
+      <ul class="list-group list-group-flush" id="conversationList">
+      </ul>
     </div>
+    <div class="card chat col-8">
+      <ul id="messageList"></ul>
+      <div class="card-body">
+        <textarea class="col-12" style="display:none;" id="enterMessage"
+          placeholder="Please enter your message here."></textarea>
+        <button style="display:none;" class="btn btn-primary" id="submitMessage">Send</button>
+      </div>
 
+    </div>
   </div>
 </div>
