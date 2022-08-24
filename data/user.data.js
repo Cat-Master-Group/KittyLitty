@@ -209,6 +209,7 @@ const getSelectedUsers = async (id) => {
     curUser.blockedUsers = curUser.blockedUsers.map((x) => ObjectId(x));
     blackList = [...curUser.blockedUsers, ...blackList];
   }
+  filterMiles = filterMiles * 1609.34;
   const selectedUsers = await userCollection
     .find(
       {
@@ -301,7 +302,7 @@ const swipe = async (id, matchId) => {
     }
     let userFollowedList = [];
     if (curUser.followedUsers) {
-      userFollowedUsers = [...curUser.followedUsers];
+      userFollowedList = [...curUser.followedUsers];
     }
     userFriendList.push(ObjectId(matchId));
     userFollowedList.push(ObjectId(matchId));
@@ -327,7 +328,6 @@ const swipe = async (id, matchId) => {
       {
         $set: {
           friendedUsers: matchFriendList,
-          followedUsers: matchUser.followedUsers,
         },
       }
     );
@@ -399,8 +399,8 @@ const reportOneUser = async (id, offendedId, reason, details) => {
 
 const addComment = async (commentTargetId, commentObj) => {
   const userCollection = await users();
-  const curUser = await getUser(commentObj.commenterId);
-  const targetUser = await getUser(commentTargetId);
+  const curUser = await getUser(commentObj.commenterId.toString());
+  const targetUser = await getUser(commentTargetId.toString());
   if (!curUser) {
     throw "Commenter ID invalid.";
   }
