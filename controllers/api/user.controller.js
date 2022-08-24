@@ -164,7 +164,7 @@ const deleteUser = async (req, res, next) => {
   }
 
   try {
-    const oneUser = removeUser(req.session.user._id);
+    const oneUser = userdb.removeUser(req.session.user._id);
     if (oneUser) {
       req.session.destroy();
       return res.json({ deleted: true });
