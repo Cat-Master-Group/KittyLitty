@@ -20,6 +20,7 @@ const signUp = async (req, res, next) => {
       payload.userCat.catGallery.push(xss(element));
     });
     payload.userBio = xss(req.body.userBio);
+    payload.userLocation = [Number(req.body.userLocation[0]), Number(req.body.userLocation[1])]
 
     const oneUser = await userdb.createUser(payload);
 

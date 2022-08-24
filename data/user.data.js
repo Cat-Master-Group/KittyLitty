@@ -19,7 +19,10 @@ const createUser = async (payload) => {
     !payload.userCat.catBreed ||
     !payload.userCat.catIsAltered ||
     !payload.userCat.catGallery ||
-    !payload.userBio
+    !payload.userBio ||
+    !payload.userLocation ||
+    !Array.isArray(payload.userLocation) ||
+    payload.userLocation.length != 2
   ) {
     throw "signup incomplete";
   }
@@ -27,7 +30,10 @@ const createUser = async (payload) => {
   const userCollection = await users();
 
   payload.password = await bcrypt.hash(payload.password, saltRounds);
-
+  payload.userLocation = {
+    type: "Point",
+    coordinates: payload.userLocation,
+  };
   const oneUser = await userCollection.insertOne(payload);
   if (oneUser.insertedCount === 0) {
     throw "Insert failed!";
@@ -136,11 +142,6 @@ const changeUser = async (user, changeObj) => {
   }
   if (changeObj.userBio) {
     updateChanges.userBio = changeObj.userBio;
-  }
-  if (changeObj.commets) {
-    updateChanges.comments.push(changeObj.commets);
-  } else {
-    updateChanges.commets = [changeObj.commets];
   }
   if (
     changeObj.userLocation &&

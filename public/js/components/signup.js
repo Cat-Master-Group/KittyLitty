@@ -14,7 +14,9 @@ if (typeof globalThis.appComponents.SignUp === "undefined") {
             isValid = this.validateAge() && isValid;
             isValid = this.validateBreed() && isValid;
             isValid = this.validateAlteredStatus() && isValid;
-            isValid = this.validateImage() && isValid;
+            isValid = this.validateImage(1, true) && isValid;
+            isValid = this.validateImage(2, false) && isValid;
+            isValid = this.validateImage(3, false) && isValid;
 
             return isValid;
         },
@@ -156,14 +158,18 @@ if (typeof globalThis.appComponents.SignUp === "undefined") {
             catAlteredErrorSpan.textContent = "";
             return true;
         },
-        validateImage: function validateImage() {
-            const catImageElement = document.getElementById("signup-cat-image");
-            const catImageErrorSpan = document.getElementById("signup-cat-image-error");
+        validateImage: function validateImage(index, required) {
+            const catImageElement = document.getElementById("signup-cat-image-" + index.toString());
+            const catImageErrorSpan = document.getElementById("signup-cat-image-error-" + index.toString());
             const catImageInput = catImageElement.value;
 
             if (appComponents.Validate.isEmptyString(catImageInput)) {
-                catImageErrorSpan.textContent = "No cat image url given.";
-                return false;
+                if (required) {
+                    catImageErrorSpan.textContent = "No cat image url given.";
+                    return false;
+                } else {
+                    return true;
+                }
             }
 
             if (!catImageInput.match(/\.(jpg|jpeg|png|webp|avif|gif|svg)$/)) {
@@ -197,40 +203,79 @@ if (typeof globalThis.appComponents.SignUp === "undefined") {
 //Listeners
 document.getElementById("signup-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    if (appComponents.SignUp.validateSignup()) {
-        const requestConfig = {
-            method: "POST",
-            url: "/api/user/signup",
-            data: {
-                userName: filterXSS(document.getElementById("signup-username").value),
-                email: filterXSS(document.getElementById("signup-email").value),
-                password: filterXSS(document.getElementById("signup-password").value),
-                userCat: {
-                    catName: filterXSS(document.getElementById("signup-cat-name").value),
-                    catGender: filterXSS(document.getElementById("signup-cat-gender").value),
-                    catAge: parseInt(filterXSS(document.getElementById("signup-cat-age-years").value)) +
-                        parseInt(filterXSS(document.getElementById("signup-cat-age-months").value)),
-                    catBreed: filterXSS(document.getElementById("signup-cat-breed").value),
-                    catIsAltered: filterXSS(document.getElementById("signup-cat-altered").value) === "true",
-                    catGallery: [filterXSS(document.getElementById("signup-cat-image").value)],
+
+    let lat;
+    let long;
+
+    try {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (data) => {
+                    console.log(data);
+                    long = data.coords.longitude;
+                    lat = data.coords.latitude;
+
+                    const catGallery = []
+                    catGallery.push(filterXSS(document.getElementById("signup-cat-image-1").value));
+                    const imageUrl2 = filterXSS(document.getElementById("signup-cat-image-2").value);
+                    const imageUrl3 = filterXSS(document.getElementById("signup-cat-image-3").value);
+                    if (!appComponents.Validate.isEmptyString(imageUrl2)) {
+                        catGallery.push(imageUrl2);
+                    }
+
+                    if (!appComponents.Validate.isEmptyString(imageUrl3)) {
+                        catGallery.push(imageUrl3)
+                    }
+
+                    if (appComponents.SignUp.validateSignup()) {
+                        const requestConfig = {
+                            method: "POST",
+                            url: "/api/user/signup",
+                            data: {
+                                userName: filterXSS(document.getElementById("signup-username").value),
+                                email: filterXSS(document.getElementById("signup-email").value),
+                                password: filterXSS(document.getElementById("signup-password").value),
+                                userCat: {
+                                    catName: filterXSS(document.getElementById("signup-cat-name").value),
+                                    catGender: filterXSS(document.getElementById("signup-cat-gender").value),
+                                    catAge: parseInt(filterXSS(document.getElementById("signup-cat-age-years").value)) +
+                                        parseInt(filterXSS(document.getElementById("signup-cat-age-months").value)),
+                                    catBreed: filterXSS(document.getElementById("signup-cat-breed").value),
+                                    catIsAltered: filterXSS(document.getElementById("signup-cat-altered").value) === "true",
+                                    catGallery: catGallery,
+                                },
+                                userLocation: [long, lat],
+                                userBio: filterXSS(document.getElementById("signup-profile-bio").value),
+                            }
+                        };
+                        console.log(typeof requestConfig.data.userCat.catIsAltered);
+                        $.ajax(requestConfig).then((responseMessage) => {
+                            console.log(responseMessage);
+                            if (typeof assembleApp === "function" && typeof loadSignup === "function") {
+                                if (responseMessage &&
+                                    responseMessage.login &&
+                                    responseMessage.login == "success") {
+                                    assembleApp();
+                                } else {
+                                    loadSignup();
+                                    alert("Login failed please try again.");
+                                }
+                            }
+                        });
+                    }
                 },
-                userBio: filterXSS(document.getElementById("signup-profile-bio").value),
-            }
-        };
-        console.log(typeof requestConfig.data.userCat.catIsAltered);
-        $.ajax(requestConfig).then((responseMessage) => {
-            console.log(responseMessage);
-            if (typeof assembleApp === "function" && typeof loadSignup === "function") {
-                if (responseMessage &&
-                    responseMessage.login &&
-                    responseMessage.login == "success") {
-                    assembleApp();
-                } else {
-                    loadSignup();
-                    alert("Login failed please try again.");
+                (err) => {
+                    alert("Issue with Geolocation occured!");
+                    throw err;
                 }
-            }
-        });
+            );
+        } else {
+            alert("Please turn on Geolocation");
+        }
+    } catch (error) {
+        console.log(error);
+        alert("Error occured getting your location!");
+        return;
     }
 });
 
