@@ -132,7 +132,6 @@ module.exports = {
               isLikeActive: userLikeValue && userLikeValue.likeValue == Number(1) ? true : false,
               isDislikeActive: userLikeValue && userLikeValue.likeValue == Number(-1) ? true : false,
             }
-            console.log(commentObj);
             comments.push(commentObj);
           });
         } catch (e) {

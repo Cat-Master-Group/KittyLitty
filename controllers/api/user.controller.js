@@ -305,7 +305,6 @@ const addComment = async (req, res, next) => {
     apiSession.commentTargetId = commentTargetId;
     apiSession.commentObj = commentObj;
   } catch (e) {
-    console.log(e);
     res.status(400).json({ e, message: "Invalid input" });
     return;
   }
