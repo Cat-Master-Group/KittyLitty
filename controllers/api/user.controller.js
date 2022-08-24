@@ -35,7 +35,29 @@ const signIn = async (req, res, next) => {
   try {
     console.log(req.body);
     const email = xss(req.body.email);
+    if (emailInput.length == 0 || emailInput === "") {
+      return { valid: false, errorMessage: "No email provided" };
+    }
+    if (emailInput.length < 3 || emailInput.length > 255) {
+      return { valid: false, errorMessage: "Invalid email length." };
+    }
+    if (
+      !emailInput.match(
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )
+    ) {
+      return { valid: false, errorMessage: "Invalid email format." };
+    }
     const password = xss(req.body.password);
+    if (this.isEmptyString(passwordInput)) {
+      return { valid: false, errorMessage: "No password provided." };
+    }
+    if (passwordInput.length < 8) {
+      return {
+        valid: false,
+        errorMessage: "Password must be at least 8 characters long",
+      };
+    }
     console.log("email: " + email);
     console.log("password: " + password);
     const user = await userdb.authUser(email, password);
@@ -44,7 +66,8 @@ const signIn = async (req, res, next) => {
       req.session.user = user;
       res.json({ login: "success" });
     } else {
-      return res.json({ login: "fail" });
+      res.status(400).json({ login: "fail" });
+      return;
     }
   } catch (error) {
     console.log(error);
@@ -189,6 +212,7 @@ const reportUser = async (req, res, next) => {
     if (offendedId === id) {
       throw "cannot report yourself";
     }
+    //validate example
     checkString(details);
     checkString(reason);
     checkId(offendedId);
