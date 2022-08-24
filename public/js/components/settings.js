@@ -129,6 +129,7 @@
     if (catName.val().trim()) {
       payLoad.catName = catName.val().trim();
     }
+    //validation if statement
     if (catGender.val().trim()) {
       payLoad.catGender = catGender.val().trim();
     }
