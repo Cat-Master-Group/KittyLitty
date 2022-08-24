@@ -1,0 +1,18 @@
+#available-swipe-buttons {
+    width: 100vw;
+    position: fixed;
+    bottom: 50vh;
+    text-align: center;
+}
+
+#available-swipe-buttons #decline {
+    margin-right: 40vw;
+}
+
+#available-swipe-buttons #accept {
+    margin-left: 40vw;
+}
+
+#available-container #currentUser {
+    min-height: 100%;
+}

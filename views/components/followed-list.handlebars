@@ -1,10 +1,13 @@
-<h1>Followed List</h1>
-<ul id="followed-list">
-    {{#each followedUsers}}
-    <li>
-        <div class="followed-list-entry" id="user-{{this._id}}">
-            <span>{{this.userName}}</span>
-        </div>
-    </li>
-    {{/each}}
-</ul>
+<div id="followed-list-card" class="card">
+    <div class="card-header">
+        <h1>Followed List</h1>
+    </div>
+    <ul class="list-group list-group-flush">
+        {{#each followedUsers}}
+        <li class="list-group-item followed-list-entry" id="user-{{this._id}}">
+            <button class="btn btn-outline-primary col-12">{{this.userName}}</button>
+        </li>
+        {{/each}}
+    </ul>
+</div>
+</div>

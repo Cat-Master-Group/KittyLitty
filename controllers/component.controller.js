@@ -28,6 +28,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "header-menu";
     renderData.script = true;
+    renderData.css = true;
     res.render("components/header-menu", renderData);
   },
 
@@ -37,6 +38,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "followed-list";
     renderData.script = true;
+    renderData.css = true;
 
     const projection = {};
     projection.projection = {
@@ -162,6 +164,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "available";
     renderData.script = true;
+    renderData.css = true;
     res.render("components/available", renderData);
   },
 

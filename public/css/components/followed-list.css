@@ -1,0 +1,9 @@
+#followed-list-container {
+    padding-left: 20vw;
+    padding-right: 20vw;
+    min-height: 90vh;
+}
+
+#followed-list-container #followed-list-card {
+    min-height: 100%;
+}
