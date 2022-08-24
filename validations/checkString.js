@@ -7,19 +7,19 @@
     🚧
 
     */
-const checkString = (message) => {
-  if (!message) {
-    throw `MESSAGE UNDEFINED ERROR: message cannot be undefined`;
+const checkString = (str) => {
+  if (!str) {
+    throw `str UNDEFINED ERROR: str cannot be undefined`;
   }
 
-  if (typeof message !== "string") {
-    throw `MESSAGE NOT STRING ERROR: message must a string`;
+  if (typeof str !== "string") {
+    throw `str NOT STRING ERROR: str must a string`;
   }
 
-  message = message.trim();
+  str = str.trim();
 
-  if (message.length === 0) {
-    throw `MESSAGE EMPTY ERROR: message cannot be an empty string or just spaces.`;
+  if (str.length === 0) {
+    throw `str EMPTY ERROR: str cannot be an empty string or just spaces.`;
   }
 };
 
