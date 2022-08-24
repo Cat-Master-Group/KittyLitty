@@ -8,6 +8,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "signin";
     renderData.script = true;
+    renderData.css = true;
     res.render("components/signin", renderData);
   },
 
@@ -17,6 +18,7 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "signup";
     renderData.script = true;
+    renderData.css = true;
     res.render("components/signup", renderData);
   },
 
@@ -64,6 +66,8 @@ module.exports = {
     renderData.ajax = req.query.ajax;
     renderData.componentname = "settings";
     renderData.script = true;
+
+    renderData.userInfo = req.session.user;
     res.render("components/settings", renderData);
   },
 
@@ -90,9 +94,13 @@ module.exports = {
         userName: true,
       };
 
-      userInfo.userComments.forEach((element) => {
-        commenterIdArray.push(element.commenterId);
-      });
+      try {
+        userInfo.userComments.forEach((element) => {
+          commenterIdArray.push(element.commenterId);
+        });
+      } catch (e) {
+        console.log(e);
+      }
 
       userdb.getUserArray(commenterIdArray, projection).then((commenterArray) => {
         const commenterNameMap = new Map(commenterArray.map((commenter) => {
@@ -101,27 +109,31 @@ module.exports = {
 
         const comments = [];
 
-        userInfo.userComments.forEach((element) => {
-          console.log(commenterNameMap);
-          let likeSum = 0;
-          element.likes.forEach((like) => {
-            likeSum += Number(like.likeValue);
-          });
+        try {
+          userInfo.userComments.forEach((element) => {
+            console.log(commenterNameMap);
+            let likeSum = 0;
+            element.likes.forEach((like) => {
+              likeSum += Number(like.likeValue);
+            });
 
-          const userLikeValue = element.likes.find((like) => {
-            return like.likerId === req.session.user._id.toString();
+            const userLikeValue = element.likes.find((like) => {
+              return like.likerId === req.session.user._id.toString();
+            });
+            const commentObj = {
+              commenterName: commenterNameMap.get(element.commenterId),
+              commenterId: element.commenterId,
+              commentText: element.commentText,
+              commentLikeSum: likeSum,
+              userLikeValue: userLikeValue ? userLikeValue : 0,
+              isLikeActive: userLikeValue && userLikeValue.likeValue == Number(1) ? true : false,
+              isDislikeActive: userLikeValue && userLikeValue.likeValue == Number(-1) ? true : false,
+            }
+            comments.push(commentObj);
           });
-          const commentObj = {
-            commenterName: commenterNameMap.get(element.commenterId),
-            commenterId: element.commenterId,
-            commentText: element.commentText,
-            commentLikeSum: likeSum,
-            userLikeValue: userLikeValue ? userLikeValue : 0,
-            isLikeActive: userLikeValue && userLikeValue.likeValue == Number(1) ? true : false,
-            isDislikeActive: userLikeValue && userLikeValue.likeValue == Number(-1) ? true : false,
-          }
-          comments.push(commentObj);
-        });
+        } catch (e) {
+          console.log(e);
+        }
 
         renderData.catInfo = {};
         renderData.catInfo.catGallery = userInfo.userCat.catGallery;
@@ -137,6 +149,7 @@ module.exports = {
 
         renderData.isCurrentUser = userInfo._id.toString() === req.session.user._id.toString();
         renderData.comments = comments;
+        renderData.hasComments = comments.length > 0;
         res.render("components/user-info", renderData);
       });
     });
