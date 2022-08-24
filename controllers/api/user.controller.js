@@ -36,10 +36,12 @@ const signIn = async (req, res, next) => {
     console.log(req.body);
     const email = xss(req.body.email);
     if (emailInput.length == 0 || emailInput === "") {
-      return { valid: false, errorMessage: "No email provided" };
+      res.status(400).json({ email: "No email provided" });
+      return;
     }
     if (emailInput.length < 3 || emailInput.length > 255) {
-      return { valid: false, errorMessage: "Invalid email length." };
+      res.status(400).json({ email: "Invalid email length" });
+      return;
     }
     if (
       !emailInput.match(
@@ -50,13 +52,14 @@ const signIn = async (req, res, next) => {
     }
     const password = xss(req.body.password);
     if (this.isEmptyString(passwordInput)) {
-      return { valid: false, errorMessage: "No password provided." };
+      res.status(400).json({ errorMessage: "No password provided" });
+      return;
     }
     if (passwordInput.length < 8) {
-      return {
-        valid: false,
-        errorMessage: "Password must be at least 8 characters long",
-      };
+      res
+        .status(400)
+        .json({ errorMessage: "Password must be at least 8 characters long" });
+      return;
     }
     console.log("email: " + email);
     console.log("password: " + password);
@@ -207,12 +210,11 @@ const reportUser = async (req, res, next) => {
   const details = xss(req.body.details);
   const offendedId = xss(req.body.offendedId);
   const reason = xss(req.body.reason);
-  const id = req.session.user._id;
+  const id = xss(req.session.user._id);
   try {
     if (offendedId === id) {
       throw "cannot report yourself";
     }
-    //validate example
     checkString(details);
     checkString(reason);
     checkId(offendedId);
@@ -221,7 +223,15 @@ const reportUser = async (req, res, next) => {
     return res.status(400).json({ error, message: "Invalid input" });
   }
   try {
-    await userdb.reportOneUser();
+    await userdb.getUser(id);
+    await userdb.getUser(offendedId);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error, message: "Could not find user" });
+  }
+
+  try {
+    await userdb.reportOneUser(id, offendedId, reason, details);
     return res.json({ message: "success" });
   } catch (error) {
     console.log(error);

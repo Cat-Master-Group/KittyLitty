@@ -43,12 +43,12 @@ app.use("*", async (req, res, next) => {
   }
 
   console.log(
-    `[${dateColor(`${new Date().toUTCString()}`)}]: 
-    ${methodColor(req.method)} 
-    ${urlColor(req.originalUrl)} 
-    (${req.session.user
-      ? authColor(`Authenticated User`)
-      : nonAuthColor("Non-Authenticated User")
+    `[${dateColor(`${new Date().toUTCString()}`)}]: ${methodColor(
+      req.method
+    )} ${urlColor(req.originalUrl)} (${
+      req.session.user
+        ? authColor(`Authenticated User`)
+        : nonAuthColor("Non-Authenticated User")
     })`
   );
   next();

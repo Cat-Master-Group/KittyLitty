@@ -10,12 +10,14 @@
   let curConvo;
   let currMessageList;
 
-  const syncInterval = 1000 * 1;
   let grabFail = false;
+
+  const allConversationsURL = "/api/conversation/messages/all";
+  const sendMessageURL = "/api/conversation/messages/";
 
   const requestConfig = {
     method: "GET",
-    url: "/api/conversation/messages/all",
+    url: allConversationsURL,
   };
 
   const loadConvo = () => {
@@ -51,11 +53,10 @@
   };
 
   loadConvo();
-  setInterval(loadConvo, syncInterval);
 
   const patchRequestConfig = {
     method: "PATCH",
-    url: "/api/conversation/messages/",
+    url: sendMessageURL,
   };
 
   submitMessage.on("click", function (event) {
@@ -69,7 +70,7 @@
     if (!curConvo) {
       alert("SELECT CONVERSATION");
     } else {
-      patchRequestConfig.url = "/api/conversation/messages/" + curConvo;
+      patchRequestConfig.url = sendMessageURL + curConvo;
       patchRequestConfig.data = { messages: filterXSS(enterMessage.val()) };
       try {
         $.ajax(patchRequestConfig).then(function (response) {
@@ -88,12 +89,14 @@
 
     curConvo = event.target.value;
     const findConvo = (el) => {
-      if (el._id === curConvo) {
-        return true;
-      }
+      return () => {
+        el._id === curConvo ? true : false;
+      };
     };
     let index = convoList.findIndex(findConvo);
     currMessageList = convoList[index].messages;
+    enterMessage.show();
+    submitMessage.show();
 
     populateMessages();
   });
