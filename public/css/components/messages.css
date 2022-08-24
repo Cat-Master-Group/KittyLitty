@@ -1,0 +1,30 @@
+#messages-container {
+    padding-left: 20vw;
+    padding-right: 20vw;
+}
+
+#messages-flex-container {
+    height: 90vh;
+}
+
+#messages-container .card {
+    overflow-y: scroll;
+}
+
+#messages-container #conversationList {
+    overflow-y: scroll;
+}
+
+#messages-container #messageList {
+    height: 80%;
+    overflow-y: scroll;
+}
+
+#messages-container #submitMessage {
+    float: right;
+    margin-top: 5px;
+}
+
+#messages-container .messageText {
+    color: white;
+}

@@ -43,7 +43,7 @@
           } else {
           }
           conversationList.append(
-            `<li><button class="convo" value=${c._id}>${peopleDir[otherUser]}</button></li>`
+            `<li class="list-group-item"><button class="btn btn-outline-primary col-12 convo" value=${c._id}>${peopleDir[otherUser]}</button></li>`
           );
         });
       });

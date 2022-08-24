@@ -1,14 +1,15 @@
-<input
-  hidden
-  id="enterMessage"
-  type="text"
-  name="enterMessage"
-  placeholder="Please enter your message here"
-/>
-<button hidden id="submitMessage">Send</button>
+<div id="messages-flex-container" class="d-flex">
+  <div class="card col-4">
+    <ul class="list-group list-group-flush" id="conversationList">
+    </ul>
+  </div>
+  <div class="card chat col-8">
+    <ul id="messageList"></ul>
+    <div class="card-body">
+      <textarea class="col-12" style="display:none;" id="enterMessage"
+        placeholder="Please enter your message here."></textarea>
+      <button style="display:none;" class="btn btn-primary" id="submitMessage">Send</button>
+    </div>
 
-<ul id="conversationList"></ul>
-
-<div class="chat">
-  <ul id="messageList"></ul>
+  </div>
 </div>
