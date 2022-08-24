@@ -1,4 +1,4 @@
-document.getElementById("menu-home").addEventListener("click", function () {
+document.getElementById("menu-home").addEventListener("click", function (event) {
     assembleApp();
 });
 document.getElementById("menu-followed").addEventListener("click", function () {
