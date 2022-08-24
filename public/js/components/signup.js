@@ -194,7 +194,11 @@ if (typeof globalThis.appComponents.SignUp === "undefined") {
                 sourceArray.push("Unknown");
                 sourceArray.push("Mixed Breed");
                 sourceArray.sort();
-                $("#signup-cat-breed").autocomplete({ source: sourceArray });
+                try {
+                    $("#signup-cat-breed").autocomplete({ source: sourceArray });
+                } catch (e) {
+                    console.log("autocomplete not loaded");
+                }
             });
         },
 
@@ -208,6 +212,7 @@ document.getElementById("signup-form").addEventListener("submit", (event) => {
     let long;
 
     try {
+        $(".loading-overlay").show();
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (data) => {
@@ -246,10 +251,15 @@ document.getElementById("signup-form").addEventListener("submit", (event) => {
                                 },
                                 userLocation: [long, lat],
                                 userBio: filterXSS(document.getElementById("signup-profile-bio").value),
-                            }
+                            },
+                            error: (err) => {
+                                $(".loading-overlay").hide();
+                                alert(err.message ? err.message : "Please try again");
+                            },
                         };
                         console.log(typeof requestConfig.data.userCat.catIsAltered);
                         $.ajax(requestConfig).then((responseMessage) => {
+                            $(".loading-overlay").hide();
                             console.log(responseMessage);
                             if (typeof assembleApp === "function" && typeof loadSignup === "function") {
                                 if (responseMessage &&
@@ -280,15 +290,15 @@ document.getElementById("signup-form").addEventListener("submit", (event) => {
 });
 
 if (typeof loadSignin === "function") {
-  document
-    .getElementById("load-signin-button")
-    .addEventListener("click", loadSignin);
+    document
+        .getElementById("load-signin-button")
+        .addEventListener("click", loadSignin);
 } else {
-  document
-    .getElementById("load-signin-button")
-    .addEventListener("click", function () {
-      window.location.href = "/load/signin";
-    });
+    document
+        .getElementById("load-signin-button")
+        .addEventListener("click", function () {
+            window.location.href = "/load/signin";
+        });
 }
 
 //Other
