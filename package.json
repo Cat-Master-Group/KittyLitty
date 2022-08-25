@@ -10,7 +10,7 @@
     "start-dev": "nodemon --trace-warnings app.js -dev",
     "start-dev-no-login": "nodemon --trace-warnings app.js -dev -nologin"
   },
-  "author": "CatGroup",
+  "author": "Ali Aftab, Jesus Toxtle, Lay Gandhi, Jaeson Valles, Bradley Alder (Group 1, aka Cat Master Group)",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
